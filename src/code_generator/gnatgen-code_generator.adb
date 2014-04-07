@@ -37,6 +37,7 @@ package body GnatGen.Code_Generator is
     end loop through_params;
 
     US.Append(Contents, ") return " & Get_Attribute_Type(Name) & " is " & LF);
+    US.Append(Contents, "begin" & LF);
     US.Append(Contents, "-- Enter your contents here..." & LF);
     US.Append(Contents, "end " & Get_Attribute_Name(Name) & "; " & LF);
 
