@@ -1,11 +1,16 @@
 with Ada.Text_IO;      use Ada.Text_IO;
 with Ada.Command_Line; use Ada.Command_Line;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with GnatGen;
 with GnatGen.Project_Generator; use GnatGen.Project_Generator;
 
 -- Entry point for this command line application.
 procedure Main is 
+
+  package US renames Ada.Strings.Unbounded;
+
+  Parameters : GnatGen.String_Array(1..Argument_Count);
 
   procedure Print_Usage is
   begin
@@ -21,9 +26,14 @@ begin
     return;
   end if;
 
+  -- Copy parameters
+  for ix in 1..Argument_Count loop
+    Parameters(ix) := US.To_Unbounded_String(Argument(Number => ix));
+  end loop;
+
   -- Add here any other possible commands
   if Argument(Number => 1) = "new" then
-    GnatGen.handle_new;
+    GnatGen.handle_new(Parameters);
   else
     Put_Line("Did not understand that");
   end if;

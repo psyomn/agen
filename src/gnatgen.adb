@@ -1,22 +1,24 @@
-with Ada.Text_io;      use Ada.Text_io;
-with Ada.Command_Line; use Ada.Command_Line;
+with Ada.Text_io;           use Ada.Text_io;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with GnatGen.Project_Generator;
 
 package body GnatGen is 
 
   -- We know we want to handle something 'new'. Next argument hints us what.
-  procedure Handle_New is
-    New_Type : String := Argument(Number => 2);
+  procedure Handle_New(Params : String_Array) is
+    New_Type : Unbounded_String;
   begin
-    if Argument_Count < 3 then
+    if Params'Length < 3 then
       Put_Line("You need to provide a name.");
       return;
     end if;
 
+    New_Type := Params(2);
+
     if New_Type = "project" then
       Put_Line("Creating project...");
-      GnatGen.Project_Generator.Generate_Project(Argument(Number => 3));
+      Project_Generator.Generate_Project(US.To_String(Params(3)));
       return;
 
     elsif New_Type = "submodule" then
@@ -26,8 +28,4 @@ package body GnatGen is
 
   end Handle_New;
 
-  procedure Handle_New_Project is 
-  begin
-    put_line("going to handle new project");
-  end Handle_New_Project;
 end GnatGen;

@@ -70,61 +70,62 @@ package body GnatGen.Project_Generator is
   -- Make the gpr file with the required contents (ugly, but maybe fix later
   --   with something proper like a template).
   function Make_GPR_Contents(Name : String) return String is
+    use ASCII;
     Contents : String :=  
-      "-- Generated Gnat file " & ASCII.LF &
-      "-- See: " & ASCII.LF &
-      "--   http://docs.adacore.com/gnat-unw-docs/html/gnat_ugn_12.html " & ASCII.LF &
-      "-- " & ASCII.LF &
-      "-- Example use: " & ASCII.LF &
-      "--   gnatmake -P " & Name & ".gpr -Xmode=debug -p " & ASCII.LF &
-      "project " & Name & " is  " & ASCII.LF &
-      ASCII.LF &
-      "  -- Standard configurations " & ASCII.LF &
-      "  for Main        use (""main.adb""); " & ASCII.LF &
-      "  for Source_Dirs use (""src/**""); " & ASCII.LF &
-      "  for Exec_Dir    use ""bin/""; " & ASCII.LF &
-      ASCII.LF &
-      "  -- Ignore git scm stuff " & ASCII.LF &
-      "  for Ignore_Source_Sub_Dirs use ("".git/""); " & ASCII.LF &
-      ASCII.LF &
-      "  -- Objects are contained in their own directories (this is also " & ASCII.LF &
-      "  -- known as an isolated build). " & ASCII.LF &
-      "  for Object_Dir use ""obj/"" & external (""mode"", ""debug""); " & ASCII.LF &
-      "  for Object_Dir use ""obj/"" & external (""mode"", ""release""); " & ASCII.LF &
-      ASCII.LF & 
-      "  package Builder is  " & ASCII.LF &
+      "-- Generated Gnat file " & LF &
+      "-- See: " & LF &
+      "--   http://docs.adacore.com/gnat-unw-docs/html/gnat_ugn_12.html " & LF &
+      "-- " & LF &
+      "-- Example use: " & LF &
+      "--   gnatmake -P " & Name & ".gpr -Xmode=debug -p " & LF &
+      "project " & Name & " is  " & LF &
+      LF &
+      "  -- Standard configurations " & LF &
+      "  for Main        use (""main.adb""); " & LF &
+      "  for Source_Dirs use (""src/**""); " & LF &
+      "  for Exec_Dir    use ""bin/""; " & LF &
+      LF &
+      "  -- Ignore git scm stuff " & LF &
+      "  for Ignore_Source_Sub_Dirs use ("".git/""); " & LF &
+      LF &
+      "  -- Objects are contained in their own directories (this is also " & LF &
+      "  -- known as an isolated build). " & LF &
+      "  for Object_Dir use ""obj/"" & external (""mode"", ""debug""); " & LF &
+      "  for Object_Dir use ""obj/"" & external (""mode"", ""release""); " & LF &
+      LF & 
+      "  package Builder is  " & LF &
       "    for Executable (""main.adb"") use """
         &
         -- binary name should be lowercase
         Ada.Strings.Fixed.Translate(Name,
           Ada.Strings.Maps.Constants.Lower_Case_Map)
         &
-      """; " & ASCII.LF &
-      ASCII.LF &
-      "  end Builder; " & ASCII.LF &
-      ASCII.LF &
-      "  -- To invoke either case, you need to set the -X flag at gnatmake in command " & ASCII.LF &
-      "  -- line. You will also notice the Mode_Type type. This constrains the values " & ASCII.LF &
-      "  -- of possible valid flags. " & ASCII.LF &
-      "  type Mode_Type is (""debug"", ""release""); " & ASCII.LF &
-      "  Mode : Mode_Type := external (""mode"", ""debug""); " & ASCII.LF &
-      "  package Compiler is  " & ASCII.LF &
-      "    -- Either debug or release mode " & ASCII.LF &
-      "    case Mode is  " & ASCII.LF &
-      "    when ""debug"" => " & ASCII.LF &
-      "      for Switches (""Ada"") use (""-g""); " & ASCII.LF &
-      "    when ""release"" =>  " & ASCII.LF &
-      "      for Switches (""Ada"") use (""-O2""); " & ASCII.LF &
-      "    end case; " & ASCII.LF &
-      "  end Compiler; " & ASCII.LF &
-      ASCII.LF &
-      "  package Binder is  " & ASCII.LF &
-      "  end Binder;  " & ASCII.LF &
-      ASCII.LF &
-      "  package Linker is  " & ASCII.LF &
-      "  end Linker; " & ASCII.LF &
-      ASCII.LF &
-      "end " & Name & "; " & ASCII.LF;
+      """; " & LF &
+      LF &
+      "  end Builder; " & LF &
+      LF &
+      "  -- To invoke either case, you need to set the -X flag at gnatmake in command " & LF &
+      "  -- line. You will also notice the Mode_Type type. This constrains the values " & LF &
+      "  -- of possible valid flags. " & LF &
+      "  type Mode_Type is (""debug"", ""release""); " & LF &
+      "  Mode : Mode_Type := external (""mode"", ""debug""); " & LF &
+      "  package Compiler is  " & LF &
+      "    -- Either debug or release mode " & LF &
+      "    case Mode is  " & LF &
+      "    when ""debug"" => " & LF &
+      "      for Switches (""Ada"") use (""-g""); " & LF &
+      "    when ""release"" =>  " & LF &
+      "      for Switches (""Ada"") use (""-O2""); " & LF &
+      "    end case; " & LF &
+      "  end Compiler; " & LF &
+      LF &
+      "  package Binder is  " & LF &
+      "  end Binder;  " & LF &
+      LF &
+      "  package Linker is  " & LF &
+      "  end Linker; " & LF &
+      LF &
+      "end " & Name & "; " & LF;
   begin
     return Contents;
   end Make_GPR_Contents;
