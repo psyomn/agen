@@ -2,6 +2,7 @@ with Ada.Text_io;           use Ada.Text_io;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with GnatGen.Project_Generator;
+with GnatGen.Code_Generator;
 
 package body GnatGen is 
 
@@ -27,5 +28,32 @@ package body GnatGen is
     end if;
 
   end Handle_New;
+
+  -- Handle things that we want to print (eg: gpr files, function defs etc)
+  procedure Handle_Print(Params : String_Array) is
+    Wanted : Unbounded_String;
+  begin
+    if Params'Length < 2 then 
+      Put_Line("You need to provide a type to print (eg: gpr)");
+      return;
+    end if;
+
+    Wanted := Params(2);
+
+    if Wanted = "gpr" or Wanted = "GPR" then 
+      Put(GnatGen.Code_Generator.GPR(US.To_String(Params(3))));
+      return;
+
+    elsif Wanted = "main" then 
+      Put(GnatGen.Code_Generator.Main);
+      return;
+
+    elsif Wanted = "fn" or Wanted = "function" then
+      Put(GnatGen.Code_Generator.Main);
+      return;
+
+    end if;
+
+  end Handle_Print;
 
 end GnatGen;

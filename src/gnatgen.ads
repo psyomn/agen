@@ -7,4 +7,6 @@ package GnatGen is
 
   procedure Handle_New(Params : String_Array);
 
+  procedure Handle_Print(Params : String_Array);
+
 end GnatGen;
