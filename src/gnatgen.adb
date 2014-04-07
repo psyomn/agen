@@ -49,7 +49,10 @@ package body GnatGen is
       return;
 
     elsif Wanted = "fn" or Wanted = "function" then
-      Put(GnatGen.Code_Generator.Main);
+      Put(GnatGen.Code_Generator.Make_Func(
+        Name => US.To_String(Params(3)),
+        Params => Params(Params'First + 3.. Params'Last)
+        ));
       return;
 
     end if;
