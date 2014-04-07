@@ -55,6 +55,13 @@ package body GnatGen is
         ));
       return;
 
+    elsif Wanted = "proc" or Wanted = "procedure" then
+      Put(GnatGen.Code_Generator.Make_Procedure(
+        Name => US.To_String(Params(3)),
+        Params => Params(Params'First + 3 .. Params'Last)
+        ));
+      return;
+
     end if;
 
   end Handle_Print;

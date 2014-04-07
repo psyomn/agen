@@ -11,14 +11,20 @@ package GnatGen.Code_Generator is
 
   function Main return String;
 
-  function Make_Func(Name: String; 
+  function Make_Func(Name : String; 
     Params : GnatGen.String_Array) return String;
+
+  function Make_Procedure(Name : String;
+    Params : GnatGen.String_Array) return String;
+
+  function Make_Body(Name : String) return String;
 
 private 
 
   function Get_Attribute_Name(Attr : String) return String;
   function Get_Attribute_Type(Attr : String) return String;
   function Quick_Split(Attr : String; Choice : Slice_Number) return String;
+  function Make_Type_Signature(Params : GnatGen.String_Array) return String;
 
 end GnatGen.Code_Generator;
 
