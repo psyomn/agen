@@ -1,7 +1,12 @@
+with Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with Ada.Environment_Variables;
 with GNAT.String_Split;     use GNAT.String_Split;
 
 with GnatGen.Project_Generator; use GnatGen.Project_Generator;
+with Ada.Calendar;
+with GNAT.Calendar.Time_IO;
+with GNAT.IO;
 
 package body GnatGen.Code_Generator is 
 
@@ -16,10 +21,15 @@ package body GnatGen.Code_Generator is
   begin return Make_Simple_Main_Contents;
   end Main;
 
+  -- @author psyomn
+  -- @param name
+  -- @param params
+  -- @date 2014-04-07 (iso)
   function Make_Func(Name : String; Params : String_Array) return String is 
     use ASCII;
     Contents : Unbounded_String;
   begin
+    US.Append(Contents, Make_Comments(Params));
     US.Append(Contents, "function " & Get_Attribute_Name(Name));
     US.Append(Contents, Make_Type_Signature(Params));
     US.Append(Contents, " return " & Get_Attribute_Type(Name));
@@ -30,10 +40,12 @@ package body GnatGen.Code_Generator is
 
   -- @param Name is like hello:string, but because this is procedure we ignore
   --   the return type.
+  -- @param Params are the parameters of the procedure (type sig)
   function Make_Procedure(Name : String; Params : String_Array) return String is
     use ASCII;
     Contents : Unbounded_String;
   begin
+    US.Append(Contents, Make_Comments(Params));
     US.Append(Contents, "procedure " & Get_Attribute_Name(Name));
     Us.Append(Contents, Make_Type_Signature(Params));
     US.Append(Contents, Make_Body(Name));
@@ -41,8 +53,44 @@ package body GnatGen.Code_Generator is
   end Make_Procedure;
 
 
+  -- @author psyomn
+  -- @param params are the parameters for the type signature. This function 
+  --   will create a 'params' tag in order to document each one.
+  -- @date 2014-04-07 (iso)
+  function Make_Comments(Params : GnatGen.String_Array) return String is 
+    use ASCII;
+    Now      : Ada.Calendar.Time := Ada.Calendar.Clock;
+    Date     : String := GNAT.Calendar.Time_IO.Image(Now, "%Y-%m-%d");
+    Contents : Unbounded_String;
+  begin
+
+    -- Add author name if exists
+    if Ada.Environment_Variables.Exists(Name => "USER") then
+      US.Append(Contents, "-- @author ");
+      US.Append(Contents, Ada.Environment_Variables.Value(Name => "USER"));
+      US.Append(Contents, LF);
+    end if;
+     
+    -- gen comments for params 
+    for ix in Params'First .. Params'Last loop
+      US.Append(Contents, "-- @param ");
+      US.Append(Contents, Get_Attribute_Name(US.To_String(Params(ix))));
+      US.Append(Contents, LF);
+    end loop;
+
+    -- Add Date 
+    US.Append(Contents, "-- @date ");
+    US.Append(Contents, Date & " (iso)");
+    US.Append(Contents, LF);
+    return US.To_String(Contents);
+  end Make_Comments;
+
 -- Private
 
+  -- @author psyomn
+  -- @param params the parameters inside a type signature
+  -- @return the type signature that is to be created
+  -- @date 2014-04-07 (iso)
   function Make_Type_Signature(Params : String_Array) return String is 
     Contents : Unbounded_String;
   begin 

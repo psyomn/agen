@@ -62,6 +62,12 @@ package body GnatGen is
         ));
       return;
 
+    elsif Wanted = "cmm" or Wanted = "comment" then 
+      Put(GnatGen.Code_Generator.Make_Comments(
+        Params => Params(Params'First + 2 .. Params'Last)
+        ));
+      return; 
+
     end if;
 
   end Handle_Print;

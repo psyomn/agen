@@ -19,6 +19,8 @@ package GnatGen.Code_Generator is
 
   function Make_Body(Name : String) return String;
 
+  function Make_Comments(Params : GnatGen.String_Array) return String;
+
 private 
 
   function Get_Attribute_Name(Attr : String) return String;
