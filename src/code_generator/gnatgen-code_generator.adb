@@ -8,14 +8,21 @@ with Ada.Calendar;
 with GNAT.Calendar.Time_IO;
 with GNAT.IO;
 
+-- @author psyomn
+-- @date 2014-04-07 (iso)
 package body GnatGen.Code_Generator is 
 
+  -- @author psyomn
+  -- @date 2014-04-07 (iso)
   -- print the gpr file template given a name 
   function GPR(Name : String) return String is
   begin
     return Project_Generator.Make_GPR_Contents(Name);
   end GPR;
 
+
+  -- @author psyomn
+  -- @date 2014-04-07 (iso)
   -- print a main file template 
   function Main return String is 
   begin return Make_Simple_Main_Contents;
@@ -112,6 +119,10 @@ package body GnatGen.Code_Generator is
     return US.To_String(Contents);
   end Make_Type_Signature;
 
+  -- @author psyomn
+  -- @param name The name of the function/proc
+  -- @return the body template
+  -- @date 2014-04-07 (iso)
   function Make_Body(Name : String) return String is 
     use ASCII;
     Contents : Unbounded_String;
@@ -123,16 +134,27 @@ package body GnatGen.Code_Generator is
     return US.To_String(Contents);
   end Make_Body;
 
+  -- @author psyomn
+  -- @param Attr the attribute in form of attribname:attribtype
+  -- @date 2014-04-07 (iso)
   function Get_Attribute_Name(Attr : String) return String is 
   begin
     return Quick_Split(Attr, 1);
   end Get_Attribute_Name;
 
+  -- @author psyomn
+  -- @param Attr the attribute in form of attribname:attribtype
+  -- @date 2014-04-07 (iso)
   function Get_Attribute_Type(Attr : String) return String is 
   begin
     return Quick_Split(Attr, 2);
   end Get_Attribute_Type;
 
+  -- @author psyomn
+  -- @param Attr The attribute in form of attribname:attribtype
+  -- @param Choice The choice, which is either 1, or 2 (attribname or 
+  --   attribtype respectively).
+  -- @date 2014-04-07 (iso)
   function Quick_Split(Attr : String; Choice : Slice_Number) return String is 
     Subs : GNAT.String_Split.Slice_Set;
     Seps : String := ":";
