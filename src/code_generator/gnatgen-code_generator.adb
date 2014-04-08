@@ -20,7 +20,6 @@ package body GnatGen.Code_Generator is
     return Project_Generator.Make_GPR_Contents(Name);
   end GPR;
 
-
   -- @author psyomn
   -- @date 2014-04-07 (iso)
   -- print a main file template 
