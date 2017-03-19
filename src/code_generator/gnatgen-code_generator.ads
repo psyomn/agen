@@ -29,4 +29,3 @@ private
   function Make_Type_Signature(Params : GnatGen.String_Array) return String;
 
 end GnatGen.Code_Generator;
-
