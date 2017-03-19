@@ -1,14 +1,14 @@
 with Ada.Text_IO;       use Ada.Text_IO;
 with Ada.Strings.Fixed; use Ada.Strings.Fixed;
 with Ada.Strings.Maps;  use Ada.Strings.Maps;
-with Ada.Directories;   use Ada.Directories; 
+with Ada.Directories;   use Ada.Directories;
 
 with Ada.Strings.Maps.Constants;
 use Ada.Strings.Maps.Constants;
 
 -- Project generator module
 -- @author psyomn
-package body GnatGen.Project_Generator is 
+package body GnatGen.Project_Generator is
 
   -- Create the dirs, subdirs, main.adb, and gpr file
   procedure Generate_Project(Name : String) is
@@ -16,7 +16,7 @@ package body GnatGen.Project_Generator is
     GPR_Contents   : String := Make_GPR_Contents(Name);
     Main_Contents  : String := Make_Simple_Main_Contents;
     Current_Path   : String := Current_Directory;
-    Lower_Filename : String := 
+    Lower_Filename : String :=
         Ada.Strings.Fixed.Translate(Name,
           Ada.Strings.Maps.Constants.Lower_Case_Map);
     GPR_File       : Ada.Text_IO.File_Type;
@@ -24,14 +24,14 @@ package body GnatGen.Project_Generator is
   begin
     -- Create root dir
     Create_Directory(New_Directory => Lower_Filename);
-    
+
     -- Create obj dir
     Create_Directory(New_Directory => Lower_Filename & Dir_Sep & "obj");
-    
+
     -- Create obj/debug dir
-    Create_Directory(New_Directory => Lower_Filename & Dir_Sep & "obj" 
+    Create_Directory(New_Directory => Lower_Filename & Dir_Sep & "obj"
       & Dir_Sep & "debug");
-    
+
     -- Create obj/release dir
     Create_Directory(New_Directory => Lower_Filename & Dir_Sep & "obj"
       & Dir_Sep & "release");
@@ -43,9 +43,9 @@ package body GnatGen.Project_Generator is
     Create_Directory(New_Directory => Lower_Filename & Dir_Sep & "bin");
 
     -- Create GPR file
-    Create(GPR_File, Ada.Text_IO.Out_File, Lower_Filename & Dir_Sep 
+    Create(GPR_File, Ada.Text_IO.Out_File, Lower_Filename & Dir_Sep
       & Lower_Filename & ".gpr");
-    Put(GPR_File, Make_GPR_Contents(Name)); 
+    Put(GPR_File, Make_GPR_Contents(Name));
     Close(GPR_File);
 
     -- Create hello world file
@@ -56,10 +56,10 @@ package body GnatGen.Project_Generator is
   end Generate_Project;
 
   -- Create simple hello world stuff
-  function Make_Simple_Main_Contents return String is 
-    Contents : String := 
+  function Make_Simple_Main_Contents return String is
+    Contents : String :=
       "with Ada.Text_IO; " & ASCII.LF & ASCII.LF &
-      "procedure Main is begin" & ASCII.LF & 
+      "procedure Main is begin" & ASCII.LF &
       "  Ada.Text_IO.Put_Line(""hello world"");" & ASCII.LF &
       "end Main; " & ASCII.LF;
   begin
@@ -71,7 +71,7 @@ package body GnatGen.Project_Generator is
   --   with something proper like a template).
   function Make_GPR_Contents(Name : String) return String is
     use ASCII;
-    Contents : String :=  
+    Contents : String :=
       "-- Generated Gnat file " & LF &
       "-- See: " & LF &
       "--   http://docs.adacore.com/gnat-unw-docs/html/gnat_ugn_12.html " & LF &
@@ -92,7 +92,7 @@ package body GnatGen.Project_Generator is
       "  -- known as an isolated build). " & LF &
       "  for Object_Dir use ""obj/"" & external (""mode"", ""debug""); " & LF &
       "  for Object_Dir use ""obj/"" & external (""mode"", ""release""); " & LF &
-      LF & 
+      LF &
       "  package Builder is  " & LF &
       "    for Executable (""main.adb"") use """
         &

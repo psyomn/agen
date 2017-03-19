@@ -1,5 +1,5 @@
 -- Simon Symeonidis, 2014
--- GNAT  Project file for the gnat project generator. (A simple 
+-- GNAT  Project file for the gnat project generator. (A simple
 -- command line tool).
 --
 -- Used Manuals:
@@ -8,7 +8,7 @@
 --
 -- Example use:
 --   gnatmake -P gnatgen.gpr -Xmode=debug -p
-project GnatGen is 
+project GnatGen is
 
   -- Standard configurations
   for Main        use ("main.adb");
@@ -23,7 +23,7 @@ project GnatGen is
   for Object_Dir use "obj/" & external ("mode", "debug");
   for Object_Dir use "obj/" & external ("mode", "release");
 
-  package Builder is 
+  package Builder is
     for Executable ("main.adb") use "gnatgen";
   end Builder;
 
@@ -32,21 +32,19 @@ project GnatGen is
   -- of possible valid flags.
   type Mode_Type is ("debug", "release");
   Mode : Mode_Type := external ("mode", "debug");
-  package Compiler is 
+  package Compiler is
     -- Either debug or release mode
-    case Mode is 
+    case Mode is
     when "debug" =>
       for Switches ("Ada") use ("-g");
-    when "release" => 
+    when "release" =>
       for Switches ("Ada") use ("-O2");
     end case;
   end Compiler;
 
-  package Binder is 
-  end Binder; 
+  package Binder is
+  end Binder;
 
-  package Linker is 
+  package Linker is
   end Linker;
-
 end GnatGen;
-

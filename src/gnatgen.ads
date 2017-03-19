@@ -1,6 +1,6 @@
 with Ada.Strings.Unbounded;
 
-package GnatGen is 
+package GnatGen is
   package US renames Ada.Strings.Unbounded;
 
   type String_Array is array (Positive range <>) of US.Unbounded_String;

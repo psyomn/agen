@@ -4,7 +4,7 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with GnatGen.Project_Generator;
 with GnatGen.Code_Generator;
 
-package body GnatGen is 
+package body GnatGen is
 
   -- We know we want to handle something 'new'. Next argument hints us what.
   procedure Handle_New(Params : String_Array) is
@@ -24,7 +24,7 @@ package body GnatGen is
 
     elsif New_Type = "submodule" then
       Put_Line("Going to create submodule here");
-    
+
     end if;
 
   end Handle_New;
@@ -33,18 +33,18 @@ package body GnatGen is
   procedure Handle_Print(Params : String_Array) is
     Wanted : Unbounded_String;
   begin
-    if Params'Length < 2 then 
+    if Params'Length < 2 then
       Put_Line("You need to provide a type to print (eg: gpr)");
       return;
     end if;
 
     Wanted := Params(2);
 
-    if Wanted = "gpr" or Wanted = "GPR" then 
+    if Wanted = "gpr" or Wanted = "GPR" then
       Put(GnatGen.Code_Generator.GPR(US.To_String(Params(3))));
       return;
 
-    elsif Wanted = "main" then 
+    elsif Wanted = "main" then
       Put(GnatGen.Code_Generator.Main);
       return;
 
@@ -62,11 +62,11 @@ package body GnatGen is
         ));
       return;
 
-    elsif Wanted = "cmm" or Wanted = "comment" then 
+    elsif Wanted = "cmm" or Wanted = "comment" then
       Put(GnatGen.Code_Generator.Make_Comments(
         Params => Params(Params'First + 2 .. Params'Last)
         ));
-      return; 
+      return;
 
     end if;
 

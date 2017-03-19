@@ -10,11 +10,11 @@ with GNAT.IO;
 
 -- @author psyomn
 -- @date 2014-04-07 (iso)
-package body GnatGen.Code_Generator is 
+package body GnatGen.Code_Generator is
 
   -- @author psyomn
   -- @date 2014-04-07 (iso)
-  -- print the gpr file template given a name 
+  -- print the gpr file template given a name
   function GPR(Name : String) return String is
   begin
     return Project_Generator.Make_GPR_Contents(Name);
@@ -22,8 +22,8 @@ package body GnatGen.Code_Generator is
 
   -- @author psyomn
   -- @date 2014-04-07 (iso)
-  -- print a main file template 
-  function Main return String is 
+  -- print a main file template
+  function Main return String is
   begin return Make_Simple_Main_Contents;
   end Main;
 
@@ -31,7 +31,7 @@ package body GnatGen.Code_Generator is
   -- @param name
   -- @param params
   -- @date 2014-04-07 (iso)
-  function Make_Func(Name : String; Params : String_Array) return String is 
+  function Make_Func(Name : String; Params : String_Array) return String is
     use ASCII;
     Contents : Unbounded_String;
   begin
@@ -60,10 +60,10 @@ package body GnatGen.Code_Generator is
 
 
   -- @author psyomn
-  -- @param params are the parameters for the type signature. This function 
+  -- @param params are the parameters for the type signature. This function
   --   will create a 'params' tag in order to document each one.
   -- @date 2014-04-07 (iso)
-  function Make_Comments(Params : GnatGen.String_Array) return String is 
+  function Make_Comments(Params : GnatGen.String_Array) return String is
     use ASCII;
     Now      : Ada.Calendar.Time := Ada.Calendar.Clock;
     Date     : String := GNAT.Calendar.Time_IO.Image(Now, "%Y-%m-%d");
@@ -76,15 +76,15 @@ package body GnatGen.Code_Generator is
       US.Append(Contents, Ada.Environment_Variables.Value(Name => "USER"));
       US.Append(Contents, LF);
     end if;
-     
-    -- gen comments for params 
+
+    -- gen comments for params
     for ix in Params'First .. Params'Last loop
       US.Append(Contents, "-- @param ");
       US.Append(Contents, Get_Attribute_Name(US.To_String(Params(ix))));
       US.Append(Contents, LF);
     end loop;
 
-    -- Add Date 
+    -- Add Date
     US.Append(Contents, "-- @date ");
     US.Append(Contents, Date & " (iso)");
     US.Append(Contents, LF);
@@ -97,20 +97,20 @@ package body GnatGen.Code_Generator is
   -- @param params the parameters inside a type signature
   -- @return the type signature that is to be created
   -- @date 2014-04-07 (iso)
-  function Make_Type_Signature(Params : String_Array) return String is 
+  function Make_Type_Signature(Params : String_Array) return String is
     Contents : Unbounded_String;
-  begin 
+  begin
     US.Append(Contents, "(");
     through_params :
     for ix in Params'First..Params'Last loop
       Ada.Strings.Unbounded.Append(
         Source => Contents,
-        New_Item => 
+        New_Item =>
           -- paramname : type
-          Get_Attribute_Name(US.To_String(Params(ix))) & " : " & 
+          Get_Attribute_Name(US.To_String(Params(ix))) & " : " &
           Get_Attribute_Type(US.To_String(Params(ix))));
 
-      if ix /= Params'Last then 
+      if ix /= Params'Last then
         US.Append(Contents, " ; ");
       end if;
     end loop through_params;
@@ -122,7 +122,7 @@ package body GnatGen.Code_Generator is
   -- @param name The name of the function/proc
   -- @return the body template
   -- @date 2014-04-07 (iso)
-  function Make_Body(Name : String) return String is 
+  function Make_Body(Name : String) return String is
     use ASCII;
     Contents : Unbounded_String;
   begin
@@ -136,7 +136,7 @@ package body GnatGen.Code_Generator is
   -- @author psyomn
   -- @param Attr the attribute in form of attribname:attribtype
   -- @date 2014-04-07 (iso)
-  function Get_Attribute_Name(Attr : String) return String is 
+  function Get_Attribute_Name(Attr : String) return String is
   begin
     return Quick_Split(Attr, 1);
   end Get_Attribute_Name;
@@ -144,33 +144,33 @@ package body GnatGen.Code_Generator is
   -- @author psyomn
   -- @param Attr the attribute in form of attribname:attribtype
   -- @date 2014-04-07 (iso)
-  function Get_Attribute_Type(Attr : String) return String is 
+  function Get_Attribute_Type(Attr : String) return String is
   begin
     return Quick_Split(Attr, 2);
   end Get_Attribute_Type;
 
   -- @author psyomn
   -- @param Attr The attribute in form of attribname:attribtype
-  -- @param Choice The choice, which is either 1, or 2 (attribname or 
+  -- @param Choice The choice, which is either 1, or 2 (attribname or
   --   attribtype respectively).
   -- @date 2014-04-07 (iso)
-  function Quick_Split(Attr : String; Choice : Slice_Number) return String is 
+  function Quick_Split(Attr : String; Choice : Slice_Number) return String is
     Subs : GNAT.String_Split.Slice_Set;
     Seps : String := ":";
 
   begin
-    GNAT.String_Split.Create (Subs, Attr, 
+    GNAT.String_Split.Create (Subs, Attr,
       Seps, Mode => GNAT.String_Split.Multiple);
-    
+
     declare
       -- Choice takes either the first:second
-      Ret : String := GNAT.String_Split.Slice(Subs, Choice); 
+      Ret : String := GNAT.String_Split.Slice(Subs, Choice);
     begin
       return Ret;
     end;
-  exception when Error: others => 
+  exception when Error: others =>
     return "[param-error]";
   end Quick_Split;
 
-end GnatGen.Code_Generator; 
+end GnatGen.Code_Generator;
 

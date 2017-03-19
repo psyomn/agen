@@ -6,7 +6,7 @@ with GnatGen;
 with GnatGen.Project_Generator; use GnatGen.Project_Generator;
 
 -- Entry point for this command line application.
-procedure Main is 
+procedure Main is
 
   package US renames Ada.Strings.Unbounded;
 
@@ -20,7 +20,7 @@ procedure Main is
   end Print_Usage;
 
 begin
- 
+
   if Argument_Count < 1 then
     Print_Usage;
     return;
@@ -35,8 +35,8 @@ begin
   if Argument(Number => 1) = "new" then
     GnatGen.handle_new(Parameters);
 
-  elsif Argument(Number => 1) = "print" or 
-        Argument(Number => 1) = "p" then 
+  elsif Argument(Number => 1) = "print" or
+        Argument(Number => 1) = "p" then
     GnatGen.Handle_Print(Parameters);
 
   else

@@ -3,7 +3,7 @@ with GNAT.String_Split; use GNAT.String_Split;
 
 with GnatGen;
 
-package GnatGen.Code_Generator is 
+package GnatGen.Code_Generator is
 
   package US renames Ada.Strings.Unbounded;
 
@@ -11,7 +11,7 @@ package GnatGen.Code_Generator is
 
   function Main return String;
 
-  function Make_Func(Name : String; 
+  function Make_Func(Name : String;
     Params : GnatGen.String_Array) return String;
 
   function Make_Procedure(Name : String;
@@ -21,7 +21,7 @@ package GnatGen.Code_Generator is
 
   function Make_Comments(Params : GnatGen.String_Array) return String;
 
-private 
+private
 
   function Get_Attribute_Name(Attr : String) return String;
   function Get_Attribute_Type(Attr : String) return String;
