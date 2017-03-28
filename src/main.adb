@@ -35,6 +35,10 @@ begin
   if Argument(Number => 1) = "new" then
     GnatGen.handle_new(Parameters);
 
+  elsif Argument (Number => 1) = "throwaway" or
+        Argument (Number => 1) = "t" then
+    GnatGen.Handle_Throwaway;
+
   elsif Argument(Number => 1) = "print" or
         Argument(Number => 1) = "p" then
     GnatGen.Handle_Print(Parameters);
@@ -42,5 +46,4 @@ begin
   else
     Put_Line("Did not understand that");
   end if;
-
 end Main;

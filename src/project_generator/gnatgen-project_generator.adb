@@ -7,6 +7,15 @@ with Ada.Strings.Maps.Constants;
 use Ada.Strings.Maps.Constants;
 
 package body GnatGen.Project_Generator is
+  procedure Generate_Throwaway is
+    Filename : constant String := "main.adb";
+    Main_File : Ada.Text_IO.File_Type;
+  begin
+    Create (Main_File, Ada.Text_IO.Out_file, "main.adb");
+    Put (Main_File, Make_Simple_Main_Contents);
+    Close (Main_File);
+  end Generate_Throwaway;
+
   procedure Generate_Project(Name : String) is
     Dir_Sep        : String := "/";
     GPR_Contents   : String := Make_GPR_Contents(Name);
@@ -53,10 +62,11 @@ package body GnatGen.Project_Generator is
 
   function Make_Simple_Main_Contents return String is
     Contents : String :=
-      "with Ada.Text_IO; " & ASCII.LF & ASCII.LF &
+      "with Ada.Text_IO;" & ASCII.LF &
+      ASCII.LF &
       "procedure Main is begin" & ASCII.LF &
       "  Ada.Text_IO.Put_Line(""hello world"");" & ASCII.LF &
-      "end Main; " & ASCII.LF;
+      "end Main;" ;
   begin
     return Contents;
   end Make_Simple_Main_Contents;

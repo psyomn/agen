@@ -5,6 +5,10 @@ with GnatGen.Project_Generator;
 with GnatGen.Code_Generator;
 
 package body GnatGen is
+  procedure Handle_Throwaway is
+  begin
+    GnatGen.Project_Generator.Generate_Throwaway;
+  end Handle_Throwaway;
 
   -- We know we want to handle something 'new'. Next argument hints us what.
   procedure Handle_New(Params : String_Array) is

@@ -36,7 +36,7 @@ project GnatGen is
     -- Either debug or release mode
     case Mode is
     when "debug" =>
-      for Switches ("Ada") use ("-g");
+      for Switches ("Ada") use ("-g", "-gnatwa");
     when "release" =>
       for Switches ("Ada") use ("-O2");
     end case;

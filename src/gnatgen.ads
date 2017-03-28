@@ -9,4 +9,6 @@ package GnatGen is
 
   procedure Handle_Print(Params : String_Array);
 
+  procedure Handle_Throwaway;
+
 end GnatGen;

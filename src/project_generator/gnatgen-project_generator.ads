@@ -11,4 +11,5 @@ package GnatGen.Project_Generator is
   -- Creates a simple hello world file
   function Make_Simple_Main_Contents return String;
 
+  procedure Generate_Throwaway;
 end GnatGen.Project_Generator;
