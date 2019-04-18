@@ -11,11 +11,10 @@ package body Argument_Stack is
 		Current := Current - 1;
 	end Push_Back;
 
-	function Pop return Unbounded_String Is_Empty
-	Result : String := Argument(Current);
+	function Pop return String is
 	begin
 		Current := Current + 1;
-		return Result;
+		return Argument(Current - 1);
 	end Pop;
 
 end Argument_Stack;
