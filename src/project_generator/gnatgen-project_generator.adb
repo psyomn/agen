@@ -16,10 +16,24 @@ package body GnatGen.Project_Generator is
    end Generate_Throwaway;
 
    procedure Generate_Project(Name : String) is
+      Function Sanitize_Name(N : String) Return String is
+         -- In the future we can add any other sanitization in here if
+         -- needed be
+         Copy : String := N;
+      Begin
+         For I In Copy'First .. Copy'Last Loop
+            If Copy(I) = '-' Then
+               Copy(I) := '_';
+            End If;
+         End Loop;
+         Return Copy;
+      End Sanitize_Name;
+
+      Sanitized_Name : Constant String := Sanitize_Name(Name);
       Dir_Sep        : Constant String := "/";
       Main_Contents  : Constant String := Make_Simple_Main_Contents;
       Lower_Filename : Constant String :=
-        Ada.Strings.Fixed.Translate(Name,
+        Ada.Strings.Fixed.Translate(Sanitized_Name,
                                     Ada.Strings.Maps.Constants.Lower_Case_Map);
       GPR_File       : Ada.Text_IO.File_Type;
       Main_File      : Ada.Text_IO.File_Type;
@@ -47,7 +61,7 @@ package body GnatGen.Project_Generator is
       -- Create GPR file
       Create(GPR_File, Ada.Text_IO.Out_File, Lower_Filename & Dir_Sep
                & Lower_Filename & ".gpr");
-      Put(GPR_File, Make_GPR_Contents(Name));
+      Put(GPR_File, Make_GPR_Contents(Sanitized_Name));
       Close(GPR_File);
 
       -- Create hello world file
