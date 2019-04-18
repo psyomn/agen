@@ -2,6 +2,10 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Arguments is
 
+	---------------
+	-- Parameter --
+	---------------
+
 	function Define(Name : String; Modifier : Parameter_Modifier) return Parameter is
 	begin
 		return P : Parameter do
@@ -23,6 +27,10 @@ package body Arguments is
 		end case;
 	end Write;
 
+	----------
+	-- Flag --
+	----------
+
 	function Define(Name : String; Shorthand : String; Description : String) return Flag is
 	begin
 		return F : Flag do
@@ -36,6 +44,10 @@ package body Arguments is
 	begin
 		Put_Line(" -" & To_String(Value.Shorthand) & " | --" & To_String(Value.Name) & " - " & To_String(Value.Description));
 	end Write;
+
+	------------
+	-- Action --
+	------------
 
 	function Define(Name : String; Shorthand : String; Description : String) return Action is
 	begin

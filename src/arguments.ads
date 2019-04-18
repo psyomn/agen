@@ -3,9 +3,17 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package Arguments is
 
+	--------------
+	-- Argument --
+	--------------
+
 	type Argument is abstract tagged private;
 
 	procedure Write(Value : in Argument) is abstract;
+
+	---------------
+	-- Parameter --
+	---------------
 
 	type Parameter is new Argument with private;
 
@@ -19,11 +27,19 @@ package Arguments is
 
 	overriding procedure Write(Value : in Parameter);
 
+	----------
+	-- Flag --
+	----------
+
 	type Flag is new Argument with private;
 
 	function Define(Name : String; Shorthand : String; Description : String) return Flag;
 
 	overriding procedure Write(Value : in Flag);
+
+	------------
+	-- Action --
+	------------
 
 	type Action is new Argument with private;
 
