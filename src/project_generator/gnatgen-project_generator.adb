@@ -8,7 +8,6 @@ use Ada.Strings.Maps.Constants;
 
 package body GnatGen.Project_Generator is
   procedure Generate_Throwaway is
-    Filename : constant String := "main.adb";
     Main_File : Ada.Text_IO.File_Type;
   begin
     Create (Main_File, Ada.Text_IO.Out_file, "main.adb");
@@ -17,11 +16,9 @@ package body GnatGen.Project_Generator is
   end Generate_Throwaway;
 
   procedure Generate_Project(Name : String) is
-    Dir_Sep        : String := "/";
-    GPR_Contents   : String := Make_GPR_Contents(Name);
-    Main_Contents  : String := Make_Simple_Main_Contents;
-    Current_Path   : String := Current_Directory;
-    Lower_Filename : String :=
+    Dir_Sep        : Constant String := "/";
+    Main_Contents  : Constant String := Make_Simple_Main_Contents;
+    Lower_Filename : Constant String :=
         Ada.Strings.Fixed.Translate(Name,
           Ada.Strings.Maps.Constants.Lower_Case_Map);
     GPR_File       : Ada.Text_IO.File_Type;
@@ -61,7 +58,7 @@ package body GnatGen.Project_Generator is
   end Generate_Project;
 
   function Make_Simple_Main_Contents return String is
-    Contents : String :=
+    Contents : Constant String :=
       "with Ada.Text_IO;" & ASCII.LF &
       ASCII.LF &
       "procedure Main is begin" & ASCII.LF &
@@ -73,7 +70,7 @@ package body GnatGen.Project_Generator is
 
   function Make_GPR_Contents(Name : String) return String is
     use ASCII;
-    Contents : String :=
+    Contents : Constant String :=
       "-- Generated Gnat file" & LF &
       "-- Example use:" & LF &
       "--   gnatmake -P " & Name & ".gpr -Xmode=debug -p" & LF &

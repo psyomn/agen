@@ -1,12 +1,9 @@
-with Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Environment_Variables;
-with GNAT.String_Split;     use GNAT.String_Split;
 
 with GnatGen.Project_Generator; use GnatGen.Project_Generator;
 with Ada.Calendar;
 with GNAT.Calendar.Time_IO;
-with GNAT.IO;
 
 package body GnatGen.Code_Generator is
   function GPR(Name : String) return String is
@@ -20,7 +17,6 @@ package body GnatGen.Code_Generator is
   end Main;
 
   function Make_Func(Name : String; Params : String_Array) return String is
-    use ASCII;
     Contents : Unbounded_String;
   begin
     US.Append(Contents, Make_Comments(Params));
@@ -33,7 +29,6 @@ package body GnatGen.Code_Generator is
   end Make_Func;
 
   function Make_Procedure(Name : String; Params : String_Array) return String is
-    use ASCII;
     Contents : Unbounded_String;
   begin
     US.Append(Contents, Make_Comments(Params));
@@ -44,26 +39,25 @@ package body GnatGen.Code_Generator is
   end Make_Procedure;
 
   function Make_Comments(Params : GnatGen.String_Array) return String is
-    use ASCII;
-    Now      : Ada.Calendar.Time := Ada.Calendar.Clock;
-    Date     : String := GNAT.Calendar.Time_IO.Image(Now, "%Y-%m-%d");
+    Now      : Constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    Date     : Constant String := GNAT.Calendar.Time_IO.Image(Now, "%Y-%m-%d");
     Contents : Unbounded_String;
   begin
     if Ada.Environment_Variables.Exists(Name => "USER") then
       US.Append(Contents, "-- @author ");
       US.Append(Contents, Ada.Environment_Variables.Value(Name => "USER"));
-      US.Append(Contents, LF);
+      US.Append(Contents, Ascii.LF);
     end if;
 
     for ix in Params'First .. Params'Last loop
       US.Append(Contents, "-- @param ");
       US.Append(Contents, Get_Attribute_Name(US.To_String(Params(ix))));
-      US.Append(Contents, LF);
+      US.Append(Contents, Ascii.LF);
     end loop;
 
     US.Append(Contents, "-- @date ");
     US.Append(Contents, Date & " (iso)");
-    US.Append(Contents, LF);
+    US.Append(Contents, Ascii.LF);
     return US.To_String(Contents);
   end Make_Comments;
 
@@ -111,17 +105,17 @@ package body GnatGen.Code_Generator is
 
   function Quick_Split(Attr : String; Choice : Slice_Number) return String is
     Subs : GNAT.String_Split.Slice_Set;
-    Seps : String := ":";
+    Seps : Constant String := ":";
   begin
     GNAT.String_Split.Create (Subs, Attr,
       Seps, Mode => GNAT.String_Split.Multiple);
     declare
       -- Choice takes either the first:second
-      Ret : String := GNAT.String_Split.Slice(Subs, Choice);
+      Ret : Constant String := GNAT.String_Split.Slice(Subs, Choice);
     begin
       return Ret;
     end;
-  exception when Error: others =>
+  exception when others =>
     return "[param-error]";
   end Quick_Split;
 end GnatGen.Code_Generator;
