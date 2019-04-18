@@ -1,44 +1,24 @@
 with Ada.Strings.Unbounded;
 use Ada.Strings.Unbounded;
 
---@description Provides a specialized argument stack
---@remarks Ada.Containers doesn't provide a stack, but stack parsing the arguments is highly beneficial, so this implements what we need out of a stack. This stack specializes in Unbounded_String operations and can't be used for anything else
+--@description Provides argument stack semantics
+--@remarks Doesn't actually implement a stack, but exposes Ada.Command_Line as a stack, because those semantics are useful
 package Argument_Stack with Preelaborate is
-	--? Actually, couldn't this be a stack wrapper to Ada.Command_Line by merely pointing to the argument of Ada.Command_Line to get?
-
-	----------
-	-- Node --
-	----------
-
-	type Node is private;
-
-	type Node_Access is access all Node;
 
 	-----------
 	-- Stack --
 	-----------
 	--This is implemented as an "abstract state machine" or singleton because when would you actually have multiple arguments to parse?
 
-	procedure Load_Arguments; --Load the arguments from the command line into the stack
+	function Is_Empty return Boolean with Inline; --Whether the argument stack is empty.
 
-	function Is_Empty return Boolean with Inline; --Whether the argument stack is empty
+	function Length return Natural; --Length of the stack, the amount of arguments in it.
 
-	function Length return Natural; --Length of the stack, the amount of arguments in it
+	procedure Push_Back; --"Push" back onto the stack. This doesn't need a value because technically it just adjusts an index and the value was always there.
 
-	procedure Push(Value : in Unbounded_String); --Push the string onto the stack
-
-	function Pop return Unbounded_String; --Pop the value off the stack
-
-	function Peek return Unbounded_String; --Peek at the value on the stack top
+	function Pop return Unbounded_String; --Pop the value off the stack.
 
 private
-	type Node is record
-		Value : Unbounded_String;
-		Next : Node_Access;
-	end record;
-
-	Length : Natural := 0; --The length of the stack
-
-	Top : Node_Access; --The top node of the stack
+	Current : Positive := 1;
 
 end Argument_Stack;
