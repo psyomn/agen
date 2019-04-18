@@ -15,7 +15,11 @@ procedure Main is
    begin
       Put_Line("Use:");
       Put_Line("gnatgen <action> [params]");
-      Put_Line("  new project - to create a template of a new project");
+      Put_Line("  new project   - to create a template of a new project");
+      Put_Line("  <throwaway|t> - to create a quick hello world program");
+      Put_Line("  <print|p> <fn|proc|cmm> funcname:returntype [param:type]+");
+      Put_Line("                - to print generated code for functions, procedures, or comments");
+      Put_Line("  <help>        - print this info");
    end Print_Usage;
 
 begin
