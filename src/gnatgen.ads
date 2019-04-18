@@ -1,9 +1,8 @@
 with Ada.Strings.Unbounded;
+use Ada.Strings.Unbounded;
 
 package GnatGen is
-  package US renames Ada.Strings.Unbounded;
-
-  type String_Array is array (Positive range <>) of US.Unbounded_String;
+  type String_Array is array (Positive range <>) of Unbounded_String;
 
   procedure Handle_New(Params : String_Array);
 

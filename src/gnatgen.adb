@@ -1,13 +1,11 @@
-with Ada.Text_io;           use Ada.Text_io;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-
-with GnatGen.Project_Generator;
-with GnatGen.Code_Generator;
+with Ada.Text_IO; use Ada.Text_IO;
+with GnatGen.Project_Generator; use GnatGen.Project_Generator;
+with GnatGen.Code_Generator; use GnatGen.Code_Generator;
 
 package body GnatGen is
   procedure Handle_Throwaway is
   begin
-    GnatGen.Project_Generator.Generate_Throwaway;
+    Project_Generator.Generate_Throwaway;
   end Handle_Throwaway;
 
   -- We know we want to handle something 'new'. Next argument hints us what.
@@ -23,7 +21,7 @@ package body GnatGen is
 
     if New_Type = "project" then
       Put_Line("Creating project...");
-      Project_Generator.Generate_Project(US.To_String(Params(3)));
+      Project_Generator.Generate_Project(To_String(Params(3)));
       return;
 
     elsif New_Type = "submodule" then
@@ -45,29 +43,29 @@ package body GnatGen is
     Wanted := Params(2);
 
     if Wanted = "gpr" or Wanted = "GPR" then
-      Put(GnatGen.Code_Generator.GPR(US.To_String(Params(3))));
+      Put(Code_Generator.GPR(To_String(Params(3))));
       return;
 
     elsif Wanted = "main" then
-      Put(GnatGen.Code_Generator.Main);
+      Put(Code_Generator.Main);
       return;
 
     elsif Wanted = "fn" or Wanted = "function" then
-      Put(GnatGen.Code_Generator.Make_Func(
-        Name => US.To_String(Params(3)),
+      Put(Code_Generator.Make_Func(
+        Name => To_String(Params(3)),
         Params => Params(Params'First + 3.. Params'Last)
         ));
       return;
 
     elsif Wanted = "proc" or Wanted = "procedure" then
-      Put(GnatGen.Code_Generator.Make_Procedure(
-        Name => US.To_String(Params(3)),
+      Put(Code_Generator.Make_Procedure(
+        Name => To_String(Params(3)),
         Params => Params(Params'First + 3 .. Params'Last)
         ));
       return;
 
     elsif Wanted = "cmm" or Wanted = "comment" then
-      Put(GnatGen.Code_Generator.Make_Comments(
+      Put(Code_Generator.Make_Comments(
         Params => Params(Params'First + 2 .. Params'Last)
         ));
       return;

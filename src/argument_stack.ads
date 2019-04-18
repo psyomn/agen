@@ -4,6 +4,7 @@ use Ada.Strings.Unbounded;
 --@description Provides a specialized argument stack
 --@remarks Ada.Containers doesn't provide a stack, but stack parsing the arguments is highly beneficial, so this implements what we need out of a stack. This stack specializes in Unbounded_String operations and can't be used for anything else
 package Argument_Stack with Preelaborate is
+	--? Actually, couldn't this be a stack wrapper to Ada.Command_Line by merely pointing to the argument of Ada.Command_Line to get?
 
 	----------
 	-- Node --

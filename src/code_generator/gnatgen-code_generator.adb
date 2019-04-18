@@ -1,6 +1,4 @@
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Environment_Variables;
-
 with GnatGen.Project_Generator; use GnatGen.Project_Generator;
 with Ada.Calendar;
 with GNAT.Calendar.Time_IO;
@@ -19,23 +17,23 @@ package body GnatGen.Code_Generator is
   function Make_Func(Name : String; Params : String_Array) return String is
     Contents : Unbounded_String;
   begin
-    US.Append(Contents, Make_Comments(Params));
-    US.Append(Contents, "function " & Get_Attribute_Name(Name));
-    US.Append(Contents, Make_Type_Signature(Params));
-    US.Append(Contents, " return " & Get_Attribute_Type(Name));
-    US.Append(Contents, Make_Body(Name));
+    Append(Contents, Make_Comments(Params));
+    Append(Contents, "function " & Get_Attribute_Name(Name));
+    Append(Contents, Make_Type_Signature(Params));
+    Append(Contents, " return " & Get_Attribute_Type(Name));
+    Append(Contents, Make_Body(Name));
 
-    return US.To_String(Contents);
+    return To_String(Contents);
   end Make_Func;
 
   function Make_Procedure(Name : String; Params : String_Array) return String is
     Contents : Unbounded_String;
   begin
-    US.Append(Contents, Make_Comments(Params));
-    US.Append(Contents, "procedure " & Get_Attribute_Name(Name));
-    Us.Append(Contents, Make_Type_Signature(Params));
-    US.Append(Contents, Make_Body(Name));
-    return US.To_String(Contents);
+    Append(Contents, Make_Comments(Params));
+    Append(Contents, "procedure " & Get_Attribute_Name(Name));
+    Append(Contents, Make_Type_Signature(Params));
+    Append(Contents, Make_Body(Name));
+    return To_String(Contents);
   end Make_Procedure;
 
   function Make_Comments(Params : GnatGen.String_Array) return String is
@@ -44,53 +42,53 @@ package body GnatGen.Code_Generator is
     Contents : Unbounded_String;
   begin
     if Ada.Environment_Variables.Exists(Name => "USER") then
-      US.Append(Contents, "-- @author ");
-      US.Append(Contents, Ada.Environment_Variables.Value(Name => "USER"));
-      US.Append(Contents, Ascii.LF);
+      Append(Contents, "-- @author ");
+      Append(Contents, Ada.Environment_Variables.Value(Name => "USER"));
+      Append(Contents, Ascii.LF);
     end if;
 
     for ix in Params'First .. Params'Last loop
-      US.Append(Contents, "-- @param ");
-      US.Append(Contents, Get_Attribute_Name(US.To_String(Params(ix))));
-      US.Append(Contents, Ascii.LF);
+      Append(Contents, "-- @param ");
+      Append(Contents, Get_Attribute_Name(To_String(Params(ix))));
+      Append(Contents, Ascii.LF);
     end loop;
 
-    US.Append(Contents, "-- @date ");
-    US.Append(Contents, Date & " (iso)");
-    US.Append(Contents, Ascii.LF);
-    return US.To_String(Contents);
+    Append(Contents, "-- @date ");
+    Append(Contents, Date & " (iso)");
+    Append(Contents, Ascii.LF);
+    return To_String(Contents);
   end Make_Comments;
 
   function Make_Type_Signature(Params : String_Array) return String is
     Contents : Unbounded_String;
   begin
-    US.Append(Contents, "(");
+    Append(Contents, "(");
     through_params :
     for ix in Params'First..Params'Last loop
       Ada.Strings.Unbounded.Append(
         Source => Contents,
         New_Item =>
           -- paramname : type
-          Get_Attribute_Name(US.To_String(Params(ix))) & " : " &
-          Get_Attribute_Type(US.To_String(Params(ix))));
+          Get_Attribute_Name(To_String(Params(ix))) & " : " &
+          Get_Attribute_Type(To_String(Params(ix))));
 
       if ix /= Params'Last then
-        US.Append(Contents, " ; ");
+        Append(Contents, " ; ");
       end if;
     end loop through_params;
-    US.Append(Contents, ")");
-    return US.To_String(Contents);
+    Append(Contents, ")");
+    return To_String(Contents);
   end Make_Type_Signature;
 
   function Make_Body(Name : String) return String is
     use ASCII;
     Contents : Unbounded_String;
   begin
-    Us.Append(Contents, " is " & LF);
-    US.Append(Contents, "-- Enter your contents here..." & LF);
-    US.Append(Contents, "begin" & LF);
-    US.Append(Contents, "end " & Get_Attribute_Name(Name) & ";" & LF);
-    return US.To_String(Contents);
+    Append(Contents, " is " & LF);
+    Append(Contents, "-- Enter your contents here..." & LF);
+    Append(Contents, "begin" & LF);
+    Append(Contents, "end " & Get_Attribute_Name(Name) & ";" & LF);
+    return To_String(Contents);
   end Make_Body;
 
   function Get_Attribute_Name(Attr : String) return String is
