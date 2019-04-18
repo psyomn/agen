@@ -10,6 +10,8 @@ package body Arguments is
 		end return;
 	end Define;
 
+	function Define(Name : String) return Parameter is (Define(Name, None));
+
 	procedure Write(Value : in Parameter) is
 	begin
 		Put("<" & To_String(Value.Name) & ">");
@@ -44,10 +46,22 @@ package body Arguments is
 		end return;
 	end Define;
 
+	function Define(Name : String; Shorthand : String; Description : String; Parameters : Parameter_Array) return Action is
+	begin
+		return A : Action do
+			A := Define(Name, Shorthand, Description);
+			for Parameter of Parameters loop
+				A.Parameters.Append(Parameter);
+			end loop;
+		end return;
+	end Define;
+
 	procedure Write(Value : in Action) is
 	begin
 		Put(" " & To_String(Value.Shorthand) & " | " & To_String(Value.Name) & " ");
-		--! This is where parameters need to be written
+		for Parameter of Value.Parameters loop
+			Parameter.Write;
+		end loop;
 		Put_Line(" - " & To_String(Value.Description));
 		--! This is where flags need to be written
 	end Write;
