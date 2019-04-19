@@ -1,16 +1,51 @@
-with Arguments; use Arguments;
-with Argument_Stack;
+with Ada.Text_IO;      use Ada.Text_IO;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with GnatGen; use GnatGen;
+with Argument_Stack; use Argument_Stack;
 
 -- Entry point for this command line application.
 procedure Main is
-	New_Action : constant Action := Define("new", "n", "Generate new sources based on a specified template structure", Parameter_Array'(1 => Define("project"))); --This bizarre looking ending is because Ada can't properly figure out creating arrays of 1 item, so we need to explain. While it might seem like creating another overload of Define that accepts a single Parameter is a viable solution, it's not, as that would be dispatching on two types, and making either classwide results in dynamic expressions where they aren't allowed.
-	Help_Flag : constant Flag := Define("help", "?", "Print the help info");
-	Help_Action : constant Action := Define("help", "?", "Print the help info");
+   procedure Print_Usage is
+   begin
+      Put_Line("Use:");
+      Put_Line("gnatgen <action> [params]");
+      Put_Line("  new project   - to create a template of a new project");
+      Put_Line("  <throwaway|t> - to create a quick hello world program");
+      Put_Line("  <print|p> <fn|proc|cmm> funcname:returntype [param:type]+");
+      Put_Line("                - to print generated code for functions, procedures, or comments");
+      Put_Line("  <help>        - print this info");
+   end Print_Usage;
+
 begin
-	if Argument_Stack.Is_Empty then
-		Help_Action.Write;
-		return;
-	end if;
-	New_Action.Try_Parse.Work;
-	Help_Action.Try_Parse.Work;
+
+   if Argument_Stack.Is_Empty then
+      Print_Usage;
+      return;
+   end if;
+
+   -- Copy parameters
+   --for ix in 1..Argument_Stack loop
+   --   Parameters(ix) := To_Unbounded_String(Argument(Number => ix));
+   --end loop;
+
+   -- Add here any other possible commands
+   --if Argument(Number => 1) = "new" then
+   --   handle_new(Parameters);
+
+   --elsif Argument (Number => 1) = "throwaway" Or
+   --  Argument (Number => 1) = "t" then
+   --   Handle_Throwaway;
+
+   --elsif Argument(Number => 1) = "print" Or
+   --  Argument(Number => 1) = "p" then
+   --   Handle_Print(Parameters);
+
+   --elsif Argument(Number => 1) = "help" Or
+   --  Argument(Number => 1) = "h" Then
+   --   Print_Usage;
+
+   --else
+   --   Print_Usage;
+
+   --end if;
 end Main;

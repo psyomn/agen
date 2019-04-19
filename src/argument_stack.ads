@@ -1,7 +1,11 @@
---Provides argument stack semantics
---Doesn't actually implement a stack, but exposes Ada.Command_Line as a stack, because those semantics are useful
---This is implemented as an "abstract state machine" or singleton because when would you actually have multiple argument sets to parse?
+--@description Provides argument stack semantics
+--@remarks Doesn't actually implement a stack, but exposes Ada.Command_Line as a stack, because those semantics are useful
 package Argument_Stack with Preelaborate is
+
+	-----------
+	-- Stack --
+	-----------
+	--This is implemented as an "abstract state machine" or singleton because when would you actually have multiple arguments to parse?
 
 	function Is_Empty return Boolean with Inline; --Whether the argument stack is empty.
 
