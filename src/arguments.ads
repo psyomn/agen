@@ -49,6 +49,20 @@ package Arguments is
 
 	overriding procedure Write(Value : in Action);
 
+	-------------
+	-- Parsing --
+	-------------
+
+	type Parser_Result is tagged limited private;
+
+	function Try_Parse(Self : aliased Action) return Parser_Result'Class;
+
+	------------
+	-- Worker --
+	------------
+
+	procedure Work(Self : Parser_Result);
+
 private
 	type Argument is abstract tagged record
 		Name : Unbounded_String;
@@ -59,17 +73,24 @@ private
 	end record;
 
 	package Parameter_Vectors is new Ada.Containers.Vectors(Positive, Parameter);
-	use Parameter_Vectors;
 
 	type Flag is new Argument with record
 		Shorthand : Unbounded_String;
 		Description : Unbounded_String;
 	end record;
 
+	package Flag_Vectors is new Ada.Containers.Vectors(Positive, Flag);
+
 	type Action is new Argument with record
 		Shorthand : Unbounded_String;
 		Description : Unbounded_String;
-		Parameters : Parameter_Vectors.Vector := Empty_Vector;
+		Parameters : Parameter_Vectors.Vector := Parameter_Vectors.Empty_Vector;
+	end record;
+
+	type Action_Access is access constant Action;
+
+	type Parser_Result is tagged limited record
+		Match : Action_Access;
 	end record;
 
 end Arguments;

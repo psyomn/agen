@@ -1,4 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Characters.Handling; use Ada.Characters.Handling;
+with Argument_Stack;
 
 package body Arguments is
 
@@ -77,5 +79,30 @@ package body Arguments is
 		Put_Line(" - " & To_String(Value.Description));
 		--! This is where flags need to be written
 	end Write;
+
+	-------------
+	-- Parsing --
+	-------------
+
+	function Try_Parse(Self : aliased Action) return Parser_Result'Class is
+		Source : constant String := Argument_Stack.Pop;
+	begin
+		if To_Upper(To_String(Self.Name)) = To_Upper(Source) or To_Upper(To_String(Self.Shorthand)) = To_Upper(Source) then
+			return Parser_Result'(Match => Self'Access);
+		else 
+			Argument_Stack.Push_Back;
+			return Parser_Result'(Match => null);
+		end if;
+	end Try_Parse;
+
+	procedure Work(Self : Parser_Result) is
+	begin
+		--If the parser wasn't a success, don't take action
+		if Self.Match = null then
+			return;
+		end if;
+		--If the parser was a success, we have stuff to work with
+		Put_Line("Success");
+	end Work;
 
 end Arguments;
