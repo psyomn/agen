@@ -1,7 +1,5 @@
 with Ada.Text_IO;      use Ada.Text_IO;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with GnatGen; use GnatGen;
-with Argument_Stack; use Argument_Stack;
+with Actions.Init;
 
 -- Entry point for this command line application.
 procedure Main is
@@ -16,21 +14,18 @@ procedure Main is
       Put_Line("  <help>        - print this info");
    end Print_Usage;
 
-begin
+   Success : Boolean := False;
 
-   if Argument_Stack.Is_Empty then
-      Print_Usage;
-      return;
-   end if;
+begin
 
    -- Copy parameters
    --for ix in 1..Argument_Stack loop
    --   Parameters(ix) := To_Unbounded_String(Argument(Number => ix));
    --end loop;
 
-   -- Add here any other possible commands
-   --if Argument(Number => 1) = "new" then
-   --   handle_new(Parameters);
+   if not Success then
+      Success := Actions.Init.Try_Act;
+   end if;
 
    --elsif Argument (Number => 1) = "throwaway" Or
    --  Argument (Number => 1) = "t" then
@@ -44,8 +39,7 @@ begin
    --  Argument(Number => 1) = "h" Then
    --   Print_Usage;
 
-   --else
-   --   Print_Usage;
-
-   --end if;
+   if not Success then
+      Actions.Init.Help;
+   end if;
 end Main;

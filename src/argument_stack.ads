@@ -11,6 +11,8 @@ package Argument_Stack with Preelaborate is
 
 	function Length return Natural; --Length of the stack, the amount of arguments in it.
 
+	procedure Reset; --Reset the stack to its original state
+
 	procedure Push_Back; --"Push" back onto the stack. This doesn't need a value because technically it just adjusts an index and the value was always there.
 
 	function Pop return String; --Pop the value off the stack.
