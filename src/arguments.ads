@@ -3,6 +3,8 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package Arguments is
 
+	type Workload_Access is access Procedure;
+
 	--------------
 	-- Argument --
 	--------------
@@ -45,7 +47,11 @@ package Arguments is
 
 	function Define(Name : String; Shorthand : String; Description : String) return Action;
 
+	function Define(Name : String; Shorthand : String; Description : String; Workload : Workload_Access) return Action;
+
 	function Define(Name : String; Shorthand : String; Description : String; Parameters : Parameter_Array) return Action;
+
+	function Define(Name : String; Shorthand : String; Description : String; Parameters : Parameter_Array; Workload : Workload_Access) return Action;
 
 	overriding procedure Write(Value : in Action);
 
@@ -56,10 +62,6 @@ package Arguments is
 	type Parser_Result is tagged limited private;
 
 	function Try_Parse(Self : aliased Action) return Parser_Result'Class;
-
-	------------
-	-- Worker --
-	------------
 
 	procedure Work(Self : Parser_Result);
 
@@ -85,6 +87,7 @@ private
 		Shorthand : Unbounded_String;
 		Description : Unbounded_String;
 		Parameters : Parameter_Vectors.Vector := Parameter_Vectors.Empty_Vector;
+		Workload : Workload_Access; --Workload for when no parameters or flags are listed
 	end record;
 
 	type Action_Access is access constant Action;

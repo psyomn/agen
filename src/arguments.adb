@@ -60,6 +60,14 @@ package body Arguments is
 		end return;
 	end Define;
 
+	function Define(Name : String; Shorthand : String; Description : String; Workload : Workload_Access) return Action is
+	begin
+		return A : Action do
+			A := Define(Name, Shorthand, Description);
+			A.Workload := Workload;
+		end return;
+	end Define;
+
 	function Define(Name : String; Shorthand : String; Description : String; Parameters : Parameter_Array) return Action is
 	begin
 		return A : Action do
@@ -67,6 +75,14 @@ package body Arguments is
 			for Parameter of Parameters loop
 				A.Parameters.Append(Parameter);
 			end loop;
+		end return;
+	end Define;
+
+	function Define(Name : String; Shorthand : String; Description : String; Parameters : Parameter_Array; Workload : Workload_Access) return Action is
+	begin
+		return A : Action do
+			A := Define(Name, Shorthand, Description, Parameters);
+			A.Workload := Workload;
 		end return;
 	end Define;
 
@@ -100,9 +116,12 @@ package body Arguments is
 		--If the parser wasn't a success, don't take action
 		if Self.Match = null then
 			return;
+		else
+			--If the parser was a success, we have stuff to work with
+			if Self.Match.Parameters.Is_Empty then
+				Self.Match.Workload.all;
+			end if;
 		end if;
-		--If the parser was a success, we have stuff to work with
-		Put_Line("Success");
 	end Work;
 
 end Arguments;
