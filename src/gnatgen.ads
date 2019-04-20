@@ -22,6 +22,12 @@ package GnatGen is
   -- Print --
   -----------
 
+  procedure Print_Procedure(Name : String);
+
+  procedure Print_Procedure(Name : String; Param : Parameter);
+
+  procedure Print_Procedure(Name : String; Params : Parameter_Array);
+
   procedure Print_Function(Form : Parameter);
 
   procedure Print_Function(Name : String; Returns : String);

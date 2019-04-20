@@ -1,6 +1,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Actions.Func;
 with Actions.Init;
+with Actions.Proc;
 
 -- Entry point for this command line application.
 procedure Main is
@@ -12,10 +13,14 @@ begin
    if not Success then
       Success := Actions.Init.Try_Act;
    end if;
+   if not Success then
+      Success := Actions.Proc.Try_Act;
+   end if;
    if not Success then --Whatever was entered wasn't understood, so print all the help
       -- Part of the beauty of this approach is it handles --help for us without any code
       Actions.Func.Help;
       Actions.Init.Help;
+      Actions.Proc.Help;
    end if;
 exception
    when others =>

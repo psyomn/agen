@@ -132,6 +132,37 @@ package body GnatGen is
   -- Print --
 	-----------
 
+	procedure Print_Procedure(Name : String) is
+		Sanitized_Name : constant String := Sanitize_Name(Name);
+	begin
+		Put_Line("procedure " & Sanitized_Name & " is");
+		Put_Line("begin");
+		New_Line;
+		Put_Line("end " & Sanitized_Name & ";");
+	end Print_Procedure;
+
+	procedure Print_Procedure(Name : String; Param : Parameter) is
+		Sanitized_Name : constant String := Sanitize_Name(Name);
+	begin
+		Put_Line("procedure " & Sanitized_Name & "(" & To_String(Param.Name) & " : " & To_String(Param.Of_Type) & ") is");
+		Put_Line("begin");
+		New_Line;
+		Put_Line("end " & Sanitized_Name & ";");
+	end Print_Procedure;
+
+	procedure Print_Procedure(Name : String; Params : Parameter_Array) is
+		Sanitized_Name : constant String := Sanitize_Name(Name);
+	begin
+		Put("procedure " & Sanitized_Name & "(");
+		for I in 1 .. Params'Length - 1 loop
+			Put(To_String(Params(I).Name) & " : " & To_String(Params(Params'Last).Of_Type) & "; ");
+		end loop;
+		Put_Line(To_String(Params(Params'Last).Name) & " : " & To_String(Params(Params'Last).Of_Type) & ") is");
+		Put_Line("begin");
+		New_Line;
+		Put_Line("end " & Sanitized_Name & ";");
+	end Print_Procedure;
+
 	procedure Print_Function(Form : Parameter) is
 	begin
 		Print_Function(To_String(Form.Name), To_String(Form.Of_Type));
@@ -142,6 +173,7 @@ package body GnatGen is
 	begin
 		Put_Line("function " & Sanitized_Name & " return " & Returns & " is");
 		Put_Line("begin");
+		New_Line;
 		Put_Line("end " & Sanitized_Name & ";");
 	end Print_Function;
 
@@ -155,6 +187,7 @@ package body GnatGen is
 	begin
 		Put_Line("function " & Sanitized_Name & "(" & To_String(Param.Name) & " : " & To_String(Param.Of_Type) & ") return " & Returns & " is");
 		Put_Line("begin");
+		New_Line;
 		Put_Line("end " & Sanitized_Name & ";");
 	end Print_Function;
 
@@ -173,6 +206,7 @@ package body GnatGen is
 		end loop;
 		Put_Line(To_String(Params(Params'Last).Name) & " : " & To_String(Params(Params'Last).Of_Type) & ") return " & Returns & " is");
 		Put_Line("begin");
+		New_Line;
 		Put_Line("end " & Sanitized_Name & ";");
 	end Print_Function;
 
