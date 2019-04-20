@@ -22,6 +22,22 @@ package GnatGen is
   -- Print --
   -----------
 
+  procedure Print_Comment(Message : String);
+
+  procedure Print_Description_Comment(Message : String);
+
+  procedure Print_Exception_Comment(Name : String; Message : String);
+
+  procedure Print_Field_Comment(Name : String; Message : String);
+
+  procedure Print_Param_Comment(Name : String; Message : String);
+
+  procedure Print_Return_Comment(Message : String);
+
+  procedure Print_Summary_Comment(Message : String);
+
+  procedure Print_Value_Comment(Name : String; Message : String);
+
   procedure Print_Procedure(Name : String);
 
   procedure Print_Procedure(Name : String; Param : Parameter);

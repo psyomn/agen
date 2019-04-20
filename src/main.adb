@@ -1,4 +1,5 @@
 with Ada.Text_IO; use Ada.Text_IO;
+with Actions.Comment;
 with Actions.Func;
 with Actions.Init;
 with Actions.Proc;
@@ -7,6 +8,9 @@ with Actions.Proc;
 procedure Main is
    Success : Boolean := False;
 begin
+   if not Success then
+      Success := Actions.Comment.Try_Act;
+   end if;
    if not Success then 
       Success := Actions.Func.Try_Act;
    end if;
@@ -18,6 +22,7 @@ begin
    end if;
    if not Success then --Whatever was entered wasn't understood, so print all the help
       -- Part of the beauty of this approach is it handles --help for us without any code
+      Actions.Comment.Help;
       Actions.Func.Help;
       Actions.Init.Help;
       Actions.Proc.Help;

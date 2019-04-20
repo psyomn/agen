@@ -1,5 +1,5 @@
---@description Provides argument stack semantics
---@remarks Doesn't actually implement a stack, but exposes Ada.Command_Line as a stack, because those semantics are useful
+--@summary Provides argument stack semantics
+--@description Doesn't actually implement a stack, but exposes Ada.Command_Line as a stack, because those semantics are useful
 package Argument_Stack with Preelaborate is
 
 	-----------
@@ -9,13 +9,15 @@ package Argument_Stack with Preelaborate is
 
 	function Is_Empty return Boolean with Inline; --Whether the argument stack is empty.
 
-	function Length return Natural; --Length of the stack, the amount of arguments in it.
+	function Length return Natural with Inline; --Length of the stack, the amount of arguments in it.
 
-	procedure Reset; --Reset the stack to its original state
+	procedure Reset with Inline; --Reset the stack to its original state
 
 	procedure Push_Back; --"Push" back onto the stack. This doesn't need a value because technically it just adjusts an index and the value was always there.
 
 	function Pop return String; --Pop the value off the stack.
+
+	function Pop_Remaining return String; --Pop the remaining items off the stack as one single string
 
 private
 	Current : Positive := 1;

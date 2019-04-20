@@ -132,6 +132,46 @@ package body GnatGen is
   -- Print --
 	-----------
 
+	procedure Print_Comment(Message : String) is
+	begin
+		Put_Line("--" & Message);
+	end Print_Comment;
+
+	procedure Print_Description_Comment(Message : String) is
+	begin
+		Put_Line("--@description " & Message);
+	end Print_Description_Comment;
+
+	procedure Print_Exception_Comment(Name : String; Message : String) is
+	begin
+		Put_Line("--@exception " & Name & " " & Message);
+	end Print_Exception_Comment;
+
+  procedure Print_Field_Comment(Name : String; Message : String) is
+	begin
+		Put_Line("--@field " & Name & " " & Message);
+	end Print_Field_Comment;
+
+  procedure Print_Param_Comment(Name : String; Message : String) is
+	begin
+		Put_Line("--@param " & Name & " " & Message);
+	end Print_Param_Comment;
+
+  procedure Print_Return_Comment(Message : String) is
+	begin
+		Put_Line("--@return " & Message);
+	end Print_Return_Comment;
+
+  procedure Print_Summary_Comment(Message : String) is
+	begin
+		Put_Line("--@summary " & Message);
+	end Print_Summary_Comment;
+
+  procedure Print_Value_Comment(Name : String; Message : String) is
+	begin
+		Put_Line("--@value " & Name & " " & Message);
+	end Print_Value_Comment;
+
 	procedure Print_Procedure(Name : String) is
 		Sanitized_Name : constant String := Sanitize_Name(Name);
 	begin

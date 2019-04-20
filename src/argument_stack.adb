@@ -1,4 +1,5 @@
 with Ada.Command_Line; use Ada.Command_Line;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package body Argument_Stack is
 
@@ -21,5 +22,14 @@ package body Argument_Stack is
 		Current := Current + 1;
 		return Argument(Current - 1);
 	end Pop;
+
+	function Pop_Remaining return String is
+		Result : Unbounded_String;
+	begin
+		while not Is_Empty loop
+			Append(Result, Pop & " ");
+		end loop;
+		return To_String(Result);
+	end Pop_Remaining;
 
 end Argument_Stack;
