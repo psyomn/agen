@@ -62,10 +62,10 @@ package body GnatGen is
 		Create_Directory(Name & Directory_Separator & "bin");
 
 		-- Create GPR file
-		Create_GPR(Name);
+		Create_GPR(Name & Directory_Separator & Name);
 
 		-- Create empty Main
-		Create_Program("main");
+		Create_Program(Name & Directory_Separator & "main");
 	end Create_Project;
 
   procedure Create_GPR(Name : String) is
