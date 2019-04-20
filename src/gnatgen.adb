@@ -6,7 +6,7 @@ with GNAT.OS_Lib; use GNAT.OS_Lib;
 package body GnatGen is
 
   function Sanitize_Name(Source : String) return String is
-    subtype Invalid_Chars is Character with Dynamic_Predicate => Invalid_Chars = '-';
+    subtype Invalid_Chars is Character with Dynamic_Predicate => Invalid_Chars = '-' and Invalid_Chars = '.';
     Result : String := Source;
   begin
     for I in Result'First .. Result'Last loop
