@@ -7,7 +7,7 @@ package body Actions.Init is
 
 	procedure Help is
 	begin
-		Put_Line("  new");
+		Put_Line("  (new|init)");
 		Put_Line("    project <name> - create a project from a basic template");
 	end Help;
 
@@ -17,7 +17,9 @@ package body Actions.Init is
 		declare
 			Action : constant String := Argument_Stack.Pop;
 		begin
-			if To_Upper(Action) /= "NEW" then goto Fail; end if;
+			if To_Upper(Action) /= "NEW" and To_Upper(Action) /= "INIT" then
+			  goto Fail;
+			end if;
 		end;
 		if Argument_Stack.Is_Empty then
 			Put_Line(Standard_Error, "Error: No target was specified");

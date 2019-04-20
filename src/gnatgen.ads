@@ -1,9 +1,43 @@
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
 package GnatGen is
+
+  type Parameter is private;
+
+  type Parameter_Array is array(Positive range <>) of Parameter;
+
+  function Try_Parse(Candidate : String; Result : out Parameter) return Boolean;
+
+  ------------
+  -- Create --
+  ------------
 
   procedure Create_Project(Name : String);
 
   procedure Create_GPR(Name : String);
 
   procedure Create_Program(Name : String);
+
+  -----------
+  -- Print --
+  -----------
+
+  procedure Print_Function(Form : Parameter);
+
+  procedure Print_Function(Name : String; Returns : String);
+
+  procedure Print_Function(Form : Parameter; Param : Parameter);
+
+  procedure Print_Function(Name : String; Returns : String; Param : Parameter);
+
+  procedure Print_Function(Form : Parameter; Params : Parameter_Array);
+
+  procedure Print_Function(Name : String; Returns : String; Params : Parameter_Array);
+
+private
+	type Parameter is record
+		Name : Unbounded_String;
+		Of_Type : Unbounded_String;
+	end record;
 
 end GnatGen;

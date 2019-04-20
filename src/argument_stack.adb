@@ -4,7 +4,7 @@ package body Argument_Stack is
 
 	function Is_Empty return Boolean is (Current > Argument_Count);
 
-	function Length return Natural is (Argument_Count);
+	function Length return Natural is ((Argument_Count + 1) - Current);
 
 	procedure Reset is
 	begin
