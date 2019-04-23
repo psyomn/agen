@@ -12,17 +12,68 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
-with Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package GnatGen is
-  package US renames Ada.Strings.Unbounded;
 
-  type String_Array is array (Positive range <>) of US.Unbounded_String;
+  type Parameter is private;
 
-  procedure Handle_New(Params : String_Array);
+  type Parameter_Array is array(Positive range <>) of Parameter;
 
-  procedure Handle_Print(Params : String_Array);
+  function Try_Parse(Candidate : String; Result : out Parameter) return Boolean;
 
-  procedure Handle_Throwaway;
+  ------------
+  -- Create --
+  ------------
+
+  procedure Create_Project(Name : String);
+
+  procedure Create_GPR(Name : String);
+
+  procedure Create_Program(Name : String);
+
+  -----------
+  -- Print --
+  -----------
+
+  procedure Print_Comment(Message : String);
+
+  procedure Print_Description_Comment(Message : String);
+
+  procedure Print_Exception_Comment(Name : String; Message : String);
+
+  procedure Print_Field_Comment(Name : String; Message : String);
+
+  procedure Print_Param_Comment(Name : String; Message : String);
+
+  procedure Print_Return_Comment(Message : String);
+
+  procedure Print_Summary_Comment(Message : String);
+
+  procedure Print_Value_Comment(Name : String; Message : String);
+
+  procedure Print_Procedure(Name : String);
+
+  procedure Print_Procedure(Name : String; Param : Parameter);
+
+  procedure Print_Procedure(Name : String; Params : Parameter_Array);
+
+  procedure Print_Function(Form : Parameter);
+
+  procedure Print_Function(Name : String; Returns : String);
+
+  procedure Print_Function(Form : Parameter; Param : Parameter);
+
+  procedure Print_Function(Name : String; Returns : String; Param : Parameter);
+
+  procedure Print_Function(Form : Parameter; Params : Parameter_Array);
+
+  procedure Print_Function(Name : String; Returns : String; Params : Parameter_Array);
+
+private
+  type Parameter is record
+    Name : Unbounded_String;
+    Of_Type : Unbounded_String;
+  end record;
 
 end GnatGen;

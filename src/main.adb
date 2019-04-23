@@ -11,60 +11,37 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
+with Ada.Text_IO; use Ada.Text_IO;
+with Actions.Comment;
+with Actions.Func;
+with Actions.Init;
+with Actions.Proc;
 
-with Ada.Text_IO;      use Ada.Text_IO;
-with Ada.Command_Line; use Ada.Command_Line;
-with Ada.Strings.Unbounded;
-
-with GnatGen;
-
+-- Entry point for this command line application.
 procedure Main is
-
-   package US renames Ada.Strings.Unbounded;
-
-   Parameters : GnatGen.String_Array(1..Argument_Count);
-
-   procedure Print_Usage is
-   begin
-      Put_Line("Use:");
-      Put_Line("gnatgen <action> [params]");
-      Put_Line("  new project   - to create a template of a new project");
-      Put_Line("  <throwaway|t> - to create a quick hello world program");
-      Put_Line("  <print|p> <fn|proc|cmm> funcname:returntype [param:type]+");
-      Put_Line("                - to print generated code for functions, procedures, or comments");
-      Put_Line("  <help>        - print this info");
-   end Print_Usage;
-
+   Success : Boolean := False;
 begin
-
-   if Argument_Count < 1 then
-      Print_Usage;
-      return;
+   if not Success then
+      Success := Actions.Comment.Try_Act;
    end if;
-
-   -- Copy parameters
-   for ix in 1..Argument_Count loop
-      Parameters(ix) := US.To_Unbounded_String(Argument(Number => ix));
-   end loop;
-
-   -- Add here any other possible commands
-   if Argument(Number => 1) = "new" then
-      GnatGen.handle_new(Parameters);
-
-   elsif Argument (Number => 1) = "throwaway" Or
-     Argument (Number => 1) = "t" then
-      GnatGen.Handle_Throwaway;
-
-   elsif Argument(Number => 1) = "print" Or
-     Argument(Number => 1) = "p" then
-      GnatGen.Handle_Print(Parameters);
-
-   elsif Argument(Number => 1) = "help" Or
-     Argument(Number => 1) = "h" Then
-      Print_Usage;
-
-   else
-      Print_Usage;
-
+   if not Success then
+      Success := Actions.Func.Try_Act;
    end if;
+   if not Success then
+      Success := Actions.Init.Try_Act;
+   end if;
+   if not Success then
+      Success := Actions.Proc.Try_Act;
+   end if;
+   if not Success then --Whatever was entered wasn't understood, so print all the help
+      -- Part of the beauty of this approach is it handles --help for us without any code
+      Actions.Comment.Help;
+      Actions.Func.Help;
+      Actions.Init.Help;
+      Actions.Proc.Help;
+   end if;
+exception
+   when others =>
+      Put_Line("Looks like something bad happened. Please consider filing a bug report, including the command you wrote, and the exception that printed out, to https://github.com/psyomn/gnatgen/issues");
+      raise;
 end Main;
