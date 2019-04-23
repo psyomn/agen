@@ -4,14 +4,14 @@ with Actions.Func;
 with Actions.Init;
 with Actions.Proc;
 
--- Entry point for this command line application.
+--Entry point for this command line application.
 procedure Main is
    Success : Boolean := False;
 begin
    if not Success then
       Success := Actions.Comment.Try_Act;
    end if;
-   if not Success then 
+   if not Success then
       Success := Actions.Func.Try_Act;
    end if;
    if not Success then

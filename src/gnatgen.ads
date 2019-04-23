@@ -57,9 +57,9 @@ package GnatGen is
   procedure Print_Function(Name : String; Returns : String; Params : Parameter_Array);
 
 private
-	type Parameter is record
-		Name : Unbounded_String;
-		Of_Type : Unbounded_String;
-	end record;
+  type Parameter is record
+    Name : Unbounded_String;
+    Of_Type : Unbounded_String;
+  end record;
 
 end GnatGen;
