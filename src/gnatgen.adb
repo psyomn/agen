@@ -12,82 +12,256 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
-with Ada.Text_io;           use Ada.Text_io;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-
-with GnatGen.Project_Generator;
-with GnatGen.Code_Generator;
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Characters.Handling; use Ada.Characters.Handling;
+with Ada.Directories; use Ada.Directories;
+with GNAT.OS_Lib; use GNAT.OS_Lib;
 
 package body GnatGen is
-  procedure Handle_Throwaway is
+
+  function Sanitize_Name(Source : String) return String is
+    subtype Invalid_Chars is Character with Dynamic_Predicate => Invalid_Chars = '-' and Invalid_Chars = '.';
+    Result : String := Source;
   begin
-    GnatGen.Project_Generator.Generate_Throwaway;
-  end Handle_Throwaway;
+    for I in Result'First .. Result'Last loop
+      if Result(I) in Invalid_Chars then
+        Result(I) := '_';
+      end if;
+    end Loop;
+    return Result;
+  end Sanitize_Name;
 
-  -- We know we want to handle something 'new'. Next argument hints us what.
-  procedure Handle_New(Params : String_Array) is
-    New_Type : Unbounded_String;
+  function Try_Parse(Candidate : String; Result : out Parameter) return Boolean is
+    Split_Point : Positive := 1;
   begin
-    if Params'Length < 3 then
-      Put_Line("You need to provide a name.");
-      return;
+    --First we have to find where the : is
+    for I in 1 .. Candidate'Length loop
+      if Candidate(I) = ':' then
+        Split_Point := I;
+      end if;
+    end loop;
+    --if Split_Point is 1, we know a ':' was either never found, or found at the very beginging. Both of which are incorrect
+    if Split_Point = 1 then
+      return False;
     end if;
+    Result := Parameter'(
+      Name => To_Unbounded_String(Candidate(Candidate'First .. Split_Point - 1)),
+      Of_Type => To_Unbounded_String(Candidate(Split_Point + 1 .. Candidate'Last)));
+    return True;
+  end Try_Parse;
 
-    New_Type := Params(2);
+  ------------
+  -- Create --
+  ------------
 
-    if New_Type = "project" then
-      Put_Line("Creating project...");
-      Project_Generator.Generate_Project(US.To_String(Params(3)));
-      return;
-
-    elsif New_Type = "submodule" then
-      Put_Line("Going to create submodule here");
-
-    end if;
-
-  end Handle_New;
-
-  -- Handle things that we want to print (eg: gpr files, function defs etc)
-  procedure Handle_Print(Params : String_Array) is
-    Wanted : Unbounded_String;
+  procedure Create_Project(Name : String) is
   begin
-    if Params'Length < 2 then
-      Put_Line("You need to provide a type to print (eg: gpr)");
-      return;
-    end if;
+    Put("Creating Project...");
+    -- Create root directory
+    Create_Directory(Name);
 
-    Wanted := Params(2);
+    -- Create obj directory
+    Create_Directory(Name & Directory_Separator & "obj");
 
-    if Wanted = "gpr" or Wanted = "GPR" then
-      Put(GnatGen.Code_Generator.GPR(US.To_String(Params(3))));
-      return;
+    -- Create obj/debug directory
+    Create_Directory(Name & Directory_Separator & "obj" & Directory_Separator & "debug");
 
-    elsif Wanted = "main" then
-      Put(GnatGen.Code_Generator.Main);
-      return;
+    -- Create obj/release directory
+    Create_Directory(Name & Directory_Separator & "obj" & Directory_Separator & "release");
 
-    elsif Wanted = "fn" or Wanted = "function" then
-      Put(GnatGen.Code_Generator.Make_Func(
-        Name => US.To_String(Params(3)),
-        Params => Params(Params'First + 3.. Params'Last)
-        ));
-      return;
+    -- Create src directory
+    Create_Directory(Name & Directory_Separator & "src");
 
-    elsif Wanted = "proc" or Wanted = "procedure" then
-      Put(GnatGen.Code_Generator.Make_Procedure(
-        Name => US.To_String(Params(3)),
-        Params => Params(Params'First + 3 .. Params'Last)
-        ));
-      return;
+    -- Create bin directory
+    Create_Directory(Name & Directory_Separator & "bin");
 
-    elsif Wanted = "cmm" or Wanted = "comment" then
-      Put(GnatGen.Code_Generator.Make_Comments(
-        Params => Params(Params'First + 2 .. Params'Last)
-        ));
-      return;
+    -- Create GPR file
+    Create_GPR(Name & Directory_Separator & Name);
 
-    end if;
+    -- Create empty Main
+    Create_Program(Name & Directory_Separator & "main");
+  end Create_Project;
 
-  end Handle_Print;
+  procedure Create_GPR(Name : String) is
+    File : File_Type;
+    Sanitized_Name : constant String := Sanitize_Name(Name);
+  begin
+    Create(File, Out_File, Name & ".gpr");
+    Put_Line(File, "--Generated GNAT Project file");
+    Put_Line(File, "--Example use:");
+    Put_Line(File, "--  gprbuild -P " & Name & ".gpr -Xmode=debug -p");
+    Put_Line(FIle, "--    or");
+    Put_Line(File, "--  gnatmake -P " & Name & ".gpr -Xmode=debug -p");
+    Put_Line(File, "project " & Sanitized_Name & " is");
+    New_Line(File);
+    Put_Line(File, "  --Standard configurations");
+    Put_Line(File, "  for Main        use (""main.adb"");");
+    Put_Line(File, "  for Source_Dirs use (""src/**"");");
+    Put_Line(File, "  for Exec_Dir    use ""bin/"";");
+    New_Line(File);
+    Put_Line(File, "  --Ignore git scm stuff");
+    Put_Line(File, "  for Ignore_Source_Sub_Dirs use ("".git/"");");
+    New_Line(File);
+    Put_Line(File, "  for Object_Dir use ""obj/"" & external(""mode"", ""debug"");");
+    Put_Line(File, "  for Object_Dir use ""obj/"" & external(""mode"", ""release"");");
+    New_Line(File);
+    Put_Line(File, "  package Builder is");
+    Put_Line(File, "    for Executable (""main.adb"") use """ & To_Lower(Sanitized_Name) & """;");
+    Put_Line(File, "  end Builder;");
+    Put_Line(File, "  --To invoke either case, you need to set the -Xmode= flag for gprbuild or gnatmake in the command line. You will also notice the Mode_Type type. This constrains the values of possible valid flags; it is basically an enumeration.");
+    Put_Line(File, "  type Mode_Type is (""debug"", ""release"");");
+    Put_Line(File, "  Mode : Mode_Type := external (""mode"", ""debug"");");
+    Put_Line(File, "  package Compiler is");
+    Put_Line(File, "    --Either debug or release mode");
+    Put_Line(File, "    case Mode is");
+    Put_Line(File, "    when ""debug"" =>");
+    Put_Line(File, "      for Switches (""Ada"") use (""-g"");");
+    Put_Line(File, "    when ""release"" =>");
+    Put_Line(File, "      for Switches (""Ada"") use (""--O2"");");
+    Put_Line(File, "    end case;");
+    Put_Line(File, "  end Compiler;");
+    New_Line(File);
+    Put_Line(File, "  package Binder is");
+    Put_Line(File, "  end Binder;");
+    New_Line(File);
+    Put_Line(File, "  package Linker is");
+    Put_Line(File, "  end Linker;");
+    Put_Line(File, "end " & Sanitized_Name & ";");
+    Close(File);
+  end Create_GPR;
+
+  procedure Create_Program(Name : String) is
+    File : File_Type;
+    Sanitized_Name : constant String := Sanitize_Name(Name);
+  begin
+    Create(File, Out_File, Name & ".adb");
+    Put_Line(File, "procedure " & Sanitized_Name & "is");
+    Put_Line(File, "begin");
+    Put_Line(File, "  null;");
+    Put_Line(File, "end " & Sanitized_Name & ";");
+    Close(File);
+  end Create_Program;
+
+  -----------
+  -- Print --
+  -----------
+
+  procedure Print_Comment(Message : String) is
+  begin
+    Put_Line("--" & Message);
+  end Print_Comment;
+
+  procedure Print_Description_Comment(Message : String) is
+  begin
+    Put_Line("--@description " & Message);
+  end Print_Description_Comment;
+
+  procedure Print_Exception_Comment(Name : String; Message : String) is
+  begin
+    Put_Line("--@exception " & Name & " " & Message);
+  end Print_Exception_Comment;
+
+  procedure Print_Field_Comment(Name : String; Message : String) is
+  begin
+    Put_Line("--@field " & Name & " " & Message);
+  end Print_Field_Comment;
+
+  procedure Print_Param_Comment(Name : String; Message : String) is
+  begin
+    Put_Line("--@param " & Name & " " & Message);
+  end Print_Param_Comment;
+
+  procedure Print_Return_Comment(Message : String) is
+  begin
+    Put_Line("--@return " & Message);
+  end Print_Return_Comment;
+
+  procedure Print_Summary_Comment(Message : String) is
+  begin
+    Put_Line("--@summary " & Message);
+  end Print_Summary_Comment;
+
+  procedure Print_Value_Comment(Name : String; Message : String) is
+  begin
+    Put_Line("--@value " & Name & " " & Message);
+  end Print_Value_Comment;
+
+  procedure Print_Procedure(Name : String) is
+    Sanitized_Name : constant String := Sanitize_Name(Name);
+  begin
+    Put_Line("procedure " & Sanitized_Name & " is");
+    Put_Line("begin");
+    New_Line;
+    Put_Line("end " & Sanitized_Name & ";");
+  end Print_Procedure;
+
+  procedure Print_Procedure(Name : String; Param : Parameter) is
+    Sanitized_Name : constant String := Sanitize_Name(Name);
+  begin
+    Put_Line("procedure " & Sanitized_Name & "(" & To_String(Param.Name) & " : " & To_String(Param.Of_Type) & ") is");
+    Put_Line("begin");
+    New_Line;
+    Put_Line("end " & Sanitized_Name & ";");
+  end Print_Procedure;
+
+  procedure Print_Procedure(Name : String; Params : Parameter_Array) is
+    Sanitized_Name : constant String := Sanitize_Name(Name);
+  begin
+    Put("procedure " & Sanitized_Name & "(");
+    for I in 1 .. Params'Length - 1 loop
+      Put(To_String(Params(I).Name) & " : " & To_String(Params(Params'Last).Of_Type) & "; ");
+    end loop;
+    Put_Line(To_String(Params(Params'Last).Name) & " : " & To_String(Params(Params'Last).Of_Type) & ") is");
+    Put_Line("begin");
+    New_Line;
+    Put_Line("end " & Sanitized_Name & ";");
+  end Print_Procedure;
+
+  procedure Print_Function(Form : Parameter) is
+  begin
+    Print_Function(To_String(Form.Name), To_String(Form.Of_Type));
+  end Print_Function;
+
+  procedure Print_Function(Name : String; Returns : String) is
+    Sanitized_Name : constant String := Sanitize_Name(Name);
+  begin
+    Put_Line("function " & Sanitized_Name & " return " & Returns & " is");
+    Put_Line("begin");
+    New_Line;
+    Put_Line("end " & Sanitized_Name & ";");
+  end Print_Function;
+
+  procedure Print_Function(Form : Parameter; Param : Parameter) is
+  begin
+    Print_Function(To_String(Form.Name), To_String(Form.Of_Type), Param);
+  end Print_Function;
+
+  procedure Print_Function(Name : String; Returns : String; Param : Parameter) is
+    Sanitized_Name : constant String := Sanitize_Name(Name);
+  begin
+    Put_Line("function " & Sanitized_Name & "(" & To_String(Param.Name) & " : " & To_String(Param.Of_Type) & ") return " & Returns & " is");
+    Put_Line("begin");
+    New_Line;
+    Put_Line("end " & Sanitized_Name & ";");
+  end Print_Function;
+
+  procedure Print_Function(Form : Parameter; Params : Parameter_Array) is
+  begin
+    Print_Function(To_String(Form.Name), To_String(Form.Of_Type), Params);
+  end Print_Function;
+
+  procedure Print_Function(Name : String; Returns : String; Params : Parameter_Array) is
+    Sanitized_Name : constant String := Sanitize_Name(Name);
+  begin
+    Put("function " & Sanitized_Name & "(");
+    -- Iterate through all but the last parameter, which is printed differently
+    for I in 1 .. Params'Length - 1 loop
+      Put(To_String(Params(I).Name) & " : " & To_String(Params(Params'Last).Of_Type) & "; ");
+    end loop;
+    Put_Line(To_String(Params(Params'Last).Name) & " : " & To_String(Params(Params'Last).Of_Type) & ") return " & Returns & " is");
+    Put_Line("begin");
+    New_Line;
+    Put_Line("end " & Sanitized_Name & ";");
+  end Print_Function;
 
 end GnatGen;
