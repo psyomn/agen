@@ -1,6 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Characters.Handling; use Ada.Characters.Handling;
-with GnatGen; use GnatGen;
+with Agen; use Agen;
 with Argument_Stack;
 
 package body Actions.Init is
@@ -34,14 +34,14 @@ package body Actions.Init is
           Put_Line(Standard_Error, "Error: No name was specifed");
           goto Fail;
         end if;
-        GnatGen.Create_Project(Argument_Stack.Pop);
+        Agen.Create_Project(Argument_Stack.Pop);
         return True;
       elsif To_Upper(Target) = "GPR" then
         if Argument_Stack.Is_Empty then
           Put_Line(Standard_Error, "Error: No name was specified");
           goto Fail;
         end if;
-        GnatGen.Create_GPR(Argument_Stack.Pop);
+        Agen.Create_GPR(Argument_Stack.Pop);
         return True;
       else
         Put_Line(Standard_Error, "Error: """ & Target & """ was not an understood target");

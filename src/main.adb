@@ -42,6 +42,6 @@ begin
    end if;
 exception
    when others =>
-      Put_Line("Looks like something bad happened. Please consider filing a bug report, including the command you wrote, and the exception that printed out, to https://github.com/psyomn/gnatgen/issues");
+      Put_Line("Looks like something bad happened. Please consider filing a bug report, including the command you wrote, and the exception that printed out, to https://github.com/psyomn/agen/issues");
       raise;
 end Main;
