@@ -1,0 +1,3 @@
+[submodule "Testing"]
+	path = Testing
+	url = https://github.com/Entomy/Testing
