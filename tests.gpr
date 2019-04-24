@@ -1,0 +1,13 @@
+project Tests is
+
+  for main use "agentests.adb";
+  for Source_Dirs use ("src/**", "Generics/**", "Testing/**", "tests/**");
+  for Exec_Dir use "tests/";
+
+  for Ignore_Source_Sub_Dirs use (".git/");
+
+  package Compiler is
+	for Switches ("Ada") use ("-g", "-gnatwa");
+  end Compiler;
+
+end Tests;
