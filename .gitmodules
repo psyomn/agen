@@ -1,3 +1,6 @@
 [submodule "Testing"]
 	path = Testing
 	url = https://github.com/Entomy/Testing
+[submodule "Generics"]
+	path = Generics
+	url = https://github.com/Entomy/Generics
