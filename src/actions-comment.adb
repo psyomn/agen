@@ -1,6 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Characters.Handling; use Ada.Characters.Handling;
-with GnatGen; use GnatGen;
+with Agen; use Agen;
 with Argument_Stack;
 
 package body Actions.Comment is

@@ -14,7 +14,7 @@
 
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
-package GnatGen is
+package Agen is
 
   type Parameter is private;
 
@@ -76,4 +76,4 @@ private
     Of_Type : Unbounded_String;
   end record;
 
-end GnatGen;
+end Agen;

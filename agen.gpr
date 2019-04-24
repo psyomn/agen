@@ -19,8 +19,10 @@
 --   http://docs.adacore.com/gnat-unw-docs/html/gnat_ugn_12.html
 --
 -- Example use:
---   gnatmake -P gnatgen.gpr -Xmode=debug -p
-project GnatGen is
+--   gnatmake -P agen.gpr -Xmode=debug -p
+-- Or more recent:
+--   gprbuild -P agen.gpr -Xmode=debug -p
+project Agen is
 
   -- Standard configurations
   for Main        use ("main.adb");
@@ -36,7 +38,7 @@ project GnatGen is
   for Object_Dir use "obj/" & external ("mode", "release");
 
   package Builder is
-    for Executable ("main.adb") use "gnatgen";
+    for Executable ("main.adb") use "agen";
   end Builder;
 
   -- To invoke either case, you need to set the -X flag at gnatmake in command
@@ -59,4 +61,4 @@ project GnatGen is
 
   package Linker is
   end Linker;
-end GnatGen;
+end Agen;

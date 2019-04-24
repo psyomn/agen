@@ -17,7 +17,7 @@ with Ada.Characters.Handling; use Ada.Characters.Handling;
 with Ada.Directories; use Ada.Directories;
 with GNAT.OS_Lib; use GNAT.OS_Lib;
 
-package body GnatGen is
+package body Agen is
 
   function Sanitize_Name(Source : String) return String is
     subtype Invalid_Chars is Character with Dynamic_Predicate => Invalid_Chars = '-' and Invalid_Chars = '.';
@@ -264,4 +264,4 @@ package body GnatGen is
     Put_Line("end " & Sanitized_Name & ";");
   end Print_Function;
 
-end GnatGen;
+end Agen;

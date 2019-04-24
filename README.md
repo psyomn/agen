@@ -1,4 +1,4 @@
-# GNATGEN
+# AGEN
 
 This is a small, and stupid tool for command line users programming in Ada. It
 generates boilerplate code for you.
@@ -9,7 +9,7 @@ To build the project, you need to go into the root directory, and locate the
 gnatmake _(.gpr)_ file. Once you're there, run the following:
 
 ~~~~bash
-gnatmake -P gnatgen -p
+gnatmake -P agen -p
 ~~~~
 
 #### Commands
@@ -17,7 +17,7 @@ gnatmake -P gnatgen -p
 To create a new project template, you can run the following command:
 
 ~~~~bash
-$ gnatgen new project my-project
+$ agen new project my-project
 ~~~~
 
 The above will create the project with a template gnatmake file. There is a
@@ -27,13 +27,13 @@ project.
 
 If you want to generate the code for a function:
 ~~~~bash
-$ gnatgen print function funcname:string param1:string param2:int
+$ agen print function funcname:string param1:string param2:int
 ~~~~
 
 or the shorter equivalent:
 
 ~~~~bash
-$ gnatgen p fn funcname:string param1:string param2:int
+$ agen p fn funcname:string param1:string param2:int
 ~~~~
 
 Which will yield:
@@ -50,13 +50,13 @@ end hello;
 Generating code for a procedure is similar:
 
 ~~~~bash
-$ gnatgen print procedure myproc param1:int
+$ agen print procedure myproc param1:int
 ~~~~
 
 or the shorter equivalent:
 
 ~~~~bash
-$ gnatgen p proc myproc param1:int
+$ agen p proc myproc param1:int
 ~~~~
 
 and yield the following results:
@@ -79,7 +79,7 @@ a function that was not previously documented, you can enter the parameters
 in the following command:
 
 ~~~~bash
-$ gnatgen p cmm param1:int param2:int
+$ agen p cmm param1:int param2:int
 ~~~~
 
 and yield:
