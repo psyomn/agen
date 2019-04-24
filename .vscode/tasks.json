@@ -10,7 +10,8 @@
 			"args": [
 				"-P",
 				"agen",
-				"-p"
+				"-p",
+				"-Xmode=debug"
 			],
 			"group": {
 				"kind": "build",
