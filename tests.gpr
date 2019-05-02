@@ -15,6 +15,8 @@ project Tests is
   package Naming is
     for Spec ("Generics.Testing") use "Generics.Testing.ads";
     for Body ("Generics.Testing") use "Generics.Testing.adb";
+    for Spec ("Testing.Directories") use "Testing.Directories.ads";
+    for Body ("Testing.Directories") use "Testing.Directories.adb";
   end Naming;
 
 end Tests;

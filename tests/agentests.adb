@@ -12,10 +12,12 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
+with Ada.Directories; use Ada.Directories;
 with Agen; use Agen;
 with Testing; use Testing;
 with Testing.Directories; use Testing.Directories;
 with Agen.Testing; use Agen.Testing;
+with GNAT.OS_Lib; use GNAT.OS_Lib;
 
 procedure AgenTests is
 begin
@@ -35,7 +37,20 @@ begin
       Is_Equal("Parameter", Param, "name", "");
    end;
 
-   Create_Project("dummy");
+   declare
+      Name : constant String := "dummy";
+   begin
+      Create_Project(Name);
+      Directory_Exists(Name);
+      Directory_Exists(Name & Directory_Separator & "obj");
+      Directory_Exists(Name & Directory_Separator & "obj" & Directory_Separator & "debug");
+      Directory_Exists(Name & Directory_Separator & "obj" & Directory_Separator & "release");
+      Directory_Exists(Name & Directory_Separator & "src");
+      Directory_Exists(Name & Directory_Separator & "bin");
+      File_Exists(Name & Directory_Separator & Name & ".gpr");
+      File_Exists(Name & Directory_Separator & "main.adb");
+      Delete_Tree(Name); --Cleans up afterwards
+   end;
 
    Testing.Stop;
 end AgenTests;
