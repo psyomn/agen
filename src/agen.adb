@@ -57,7 +57,8 @@ package body Agen is
 
   procedure Create_Project(Name : String) is
   begin
-    Put("Creating Project...");
+    Put_Line("Creating Project...");
+    
     -- Create root directory
     Create_Directory(Name);
 
