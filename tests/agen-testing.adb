@@ -37,6 +37,7 @@ package body Agen.Testing is
       Put(" = """);
       Ada.Text_IO.Put(Expected_Type);
       Put("""");
+      New_Line;
    end Is_Equal;
 
    procedure Is_Not_Equal(Statement : Wide_Wide_String; Result : in Parameter; Expected_Name, Expected_Type : String) is
@@ -55,6 +56,7 @@ package body Agen.Testing is
       Put(" ≠ """);
       Ada.Text_IO.Put(Expected_Type);
       Put("""");
+      New_Line;
    end Is_Not_Equal;
 
 end Agen.Testing;

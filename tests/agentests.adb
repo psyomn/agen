@@ -14,6 +14,7 @@
 
 with Agen; use Agen;
 with Testing; use Testing;
+with Testing.Directories; use Testing.Directories;
 with Agen.Testing; use Agen.Testing;
 
 procedure AgenTests is
@@ -33,6 +34,8 @@ begin
       Is_Equal("Try_Parse(""name"")", Try_Parse("name", Param), False);
       Is_Equal("Parameter", Param, "name", "");
    end;
+
+   Create_Project("dummy");
 
    Testing.Stop;
 end AgenTests;
