@@ -42,7 +42,6 @@ $ agen fn funcname:string param1:string param2:int
 
 Which will yield:
 ~~~~ada
--- @author simon
 -- @param world
 function hello(world : string) return string is
 begin
@@ -64,7 +63,6 @@ $ agen proc myproc param1:int
 and yield the following results:
 
 ~~~~ada
--- @author simon
 -- @param param1
 procedure myproc(param1 : int) is
 -- Enter your contents here...
@@ -87,7 +85,6 @@ $ agen cmm fn funcname:string param1:int param2:int
 and will yield:
 
 ~~~~bash
--- @author simon
 -- @param param1
 -- @param param2
 -- @return
