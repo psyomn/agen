@@ -45,7 +45,19 @@ package Agen is
 
   procedure Print_Field_Comment(Name : String; Message : String);
 
+  procedure Print_Function_Comment(Name : String);
+
+  procedure Print_Function_Comment(Name : String; Param : Parameter);
+
+  procedure Print_Function_Comment(Name : String; Params : Parameter_Array);
+
   procedure Print_Param_Comment(Name : String; Message : String);
+
+  procedure Print_Procedure_Comment(Name : String);
+
+  procedure Print_Procedure_Comment(Name : String; Param : Parameter);
+
+  procedure Print_Procedure_Comment(Name : String; Params : Parameter_Array);
 
   procedure Print_Return_Comment(Message : String);
 

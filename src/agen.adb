@@ -168,10 +168,51 @@ package body Agen is
     Put_Line("--@field " & Name & " " & Message);
   end Print_Field_Comment;
 
+  procedure Print_Function_Comment(Name : String) is
+  begin
+    Print_Comment("Summary of " & Name);
+    Print_Return_Comment("Summary of return value");
+  end Print_Function_Comment;
+
+  procedure Print_Function_Comment(Name : String; Param : Parameter) is
+  begin
+      Print_Comment("Summary of " & Name);
+      Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
+      Print_Return_Comment("Summary of return value");
+  end Print_Function_Comment;
+
+  procedure Print_Function_Comment(Name : String; Params : Parameter_Array) is
+  begin
+      Print_Comment("Summary of " & Name);
+      for Param of Params loop
+        Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
+      end loop;
+      Print_Return_Comment("Summary of return value");
+  end Print_Function_Comment;
+
   procedure Print_Param_Comment(Name : String; Message : String) is
   begin
     Put_Line("--@param " & Name & " " & Message);
   end Print_Param_Comment;
+
+  procedure Print_Procedure_Comment(Name : String) is
+  begin
+    Print_Comment("Summary of " & Name);
+  end Print_Procedure_Comment;
+
+  procedure Print_Procedure_Comment(Name : String; Param : Parameter) is
+  begin
+     Print_Comment("Summary of " & Name);
+    Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
+  end Print_Procedure_Comment;
+
+  procedure Print_Procedure_Comment(Name : String; Params : Parameter_Array) is
+  begin
+    Print_Comment("Summary of " & Name);
+    for Param of Params loop
+      Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
+    end loop;
+  end Print_Procedure_Comment;
 
   procedure Print_Return_Comment(Message : String) is
   begin
@@ -197,7 +238,7 @@ package body Agen is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
     if Stub_Comments then
-      Print_Comment("Summary of " & Name);
+      Print_Procedure_Comment(Name);
     end if;
     Put_Line("procedure " & Sanitized_Name & " is");
     Put_Line("begin");
@@ -214,8 +255,7 @@ package body Agen is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
     if Stub_Comments then
-      Print_Comment("Summary of " & Name);
-      Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
+      Print_Procedure_Comment(Name, Param);
     end if;
     Put_Line("procedure " & Sanitized_Name & "(" & To_String(Param.Name) & " : " & To_String(Param.Of_Type) & ") is");
     Put_Line("begin");
@@ -232,10 +272,7 @@ package body Agen is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
     if Stub_Comments then
-      Print_Comment("Summary of " & Name);
-      for Param of Params loop
-        Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
-      end loop;
+      Print_Procedure_Comment(Name, Params);
     end if;
     Put("procedure " & Sanitized_Name & "(");
     for I in 1 .. Params'Length - 1 loop
@@ -266,8 +303,7 @@ package body Agen is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
     if Stub_Comments then
-      Print_Comment("Summary of " & Name);
-      Print_Return_Comment("Summary of return value");
+      Print_Function_Comment(Name);
     end if;
     Put_Line("function " & Sanitized_Name & " return " & Returns & " is");
     Put_Line("begin");
@@ -294,9 +330,7 @@ package body Agen is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
     if Stub_Comments then
-      Print_Comment("Summary of " & Name);
-      Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
-      Print_Return_Comment("Summary of return value");
+      Print_Function_Comment(Name, Param);
     end if;
     Put_Line("function " & Sanitized_Name & "(" & To_String(Param.Name) & " : " & To_String(Param.Of_Type) & ") return " & Returns & " is");
     Put_Line("begin");
@@ -323,11 +357,7 @@ package body Agen is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
     if Stub_Comments then
-      Print_Comment("Summary of " & Name);
-      for Param of Params loop
-        Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
-      end loop;
-      Print_Return_Comment("Summary of return value");
+      Print_Function_Comment(Name, Params);
     end if;
     Put("function " & Sanitized_Name & "(");
     -- Iterate through all but the last parameter, which is printed differently
