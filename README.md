@@ -11,6 +11,10 @@ gnatmake _(.gpr)_ file. Once you're there, run the following:
 ~~~~bash
 gnatmake -P agen -p
 ~~~~
+or
+~~~~bash
+gprbuild -P agen -p
+~~~~
 
 #### Commands
 
@@ -27,22 +31,19 @@ project.
 
 If you want to generate the code for a function:
 ~~~~bash
-$ agen print function funcname:string param1:string param2:int
+$ agen function funcname:string param1:string param2:int
 ~~~~
 
 or the shorter equivalent:
 
 ~~~~bash
-$ agen p fn funcname:string param1:string param2:int
+$ agen fn funcname:string param1:string param2:int
 ~~~~
 
 Which will yield:
 ~~~~ada
--- @author simon
 -- @param world
--- @date 2014-04-16 (iso)
 function hello(world : string) return string is
--- Enter your contents here...
 begin
 end hello;
 ~~~~
@@ -50,43 +51,41 @@ end hello;
 Generating code for a procedure is similar:
 
 ~~~~bash
-$ agen print procedure myproc param1:int
+$ agen procedure myproc param1:int
 ~~~~
 
 or the shorter equivalent:
 
 ~~~~bash
-$ agen p proc myproc param1:int
+$ agen proc myproc param1:int
 ~~~~
 
 and yield the following results:
 
 ~~~~ada
--- @author simon
 -- @param param1
--- @date 2014-04-16 (iso)
 procedure myproc(param1 : int) is
 -- Enter your contents here...
 begin
 end myproc;
 ~~~~
 
-Notice that you don't need to specify a return for the proc, in the command.
-You could provide one, but it would be ignored.
-
 You can also quickly generate comments. For example if you want to document
 a function that was not previously documented, you can enter the parameters
 in the following command:
 
 ~~~~bash
-$ agen p cmm param1:int param2:int
+$ agen comment function funcname:string param1:int param2:int
+~~~~
+or
+~~~~bash
+$ agen cmm fn funcname:string param1:int param2:int
 ~~~~
 
-and yield:
+and will yield:
 
 ~~~~bash
--- @author simon
 -- @param param1
 -- @param param2
--- @date 2014-04-16 (iso)
+-- @return
 ~~~~
