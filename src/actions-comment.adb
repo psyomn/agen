@@ -114,6 +114,29 @@ package body Actions.Comment is
             Print_Param_Comment(Name, Argument_Stack.Pop_Remaining);
             return True;
          end;
+      elsif To_Upper(Target) = "PROC" or To_Upper(Target) = "PROCEDURE" then
+         if Argument_Stack.Is_Empty then
+            Put_Line(Standard_Error, "Error: No name was specified");
+            goto Fail;
+         end if;
+         declare
+            Name : constant String := Argument_Stack.Pop;
+            Params : Parameter_Array(1 .. Argument_Stack.Length);
+         begin
+            if Argument_Stack.Is_Empty then
+               Print_Procedure_Comment(Name);
+            else
+               for I in 1 .. Argument_Stack.Length loop
+                  if not Try_Parse(Argument_Stack.Pop, Params(I)) then
+                     Argument_Stack.Push_Back;
+                     Put_Line(Standard_Error, "Error: The parameter signature """ & Argument_Stack.Pop & """ was invalid");
+                     goto Fail;
+                  end if;
+               end loop;
+               Print_Procedure_Comment(Name, Params);
+            end if;
+         end;
+         return True;
       elsif To_Upper(Target) = "RET" or To_Upper(Target) = "RETURN" then
          Print_Return_Comment(Argument_Stack.Pop_Remaining);
          return True;
