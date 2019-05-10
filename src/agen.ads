@@ -1,4 +1,4 @@
--- Copyright 2014-2019 Simon Symeonidis (psyomn)
+-- Copyright 2014-2019 Simon Symeonidis (psyomn), Patrick Kelly (entomy)
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -11,6 +11,7 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
+
 
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
@@ -54,21 +55,39 @@ package Agen is
 
   procedure Print_Procedure(Name : String);
 
+  procedure Print_Procedure(Name : String; Stub_Comments : Boolean);
+
   procedure Print_Procedure(Name : String; Param : Parameter);
+
+  procedure Print_Procedure(Name : String; Param : Parameter; Stub_Comments : Boolean);
 
   procedure Print_Procedure(Name : String; Params : Parameter_Array);
 
+  procedure Print_Procedure(Name : String; Params : Parameter_Array; Stub_Comments : Boolean);
+
   procedure Print_Function(Form : Parameter);
+
+  procedure Print_Function(Form : Parameter; Stub_Comments : Boolean);
 
   procedure Print_Function(Name : String; Returns : String);
 
+  procedure Print_Function(Name : String; Returns : String; Stub_Comments : Boolean);
+
   procedure Print_Function(Form : Parameter; Param : Parameter);
+
+  procedure Print_Function(Form : Parameter; Param : Parameter; Stub_Comments : Boolean);
 
   procedure Print_Function(Name : String; Returns : String; Param : Parameter);
 
+  procedure Print_Function(Name : String; Returns : String; Param : Parameter; Stub_Comments : Boolean);
+
   procedure Print_Function(Form : Parameter; Params : Parameter_Array);
 
+  procedure Print_Function(Form : Parameter; Params : Parameter_Array; Stub_Comments : Boolean);
+
   procedure Print_Function(Name : String; Returns : String; Params : Parameter_Array);
+
+  procedure Print_Function(Name : String; Returns : String; Params : Parameter_Array; Stub_Comments : Boolean);
 
 private
   type Parameter is record

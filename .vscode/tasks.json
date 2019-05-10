@@ -7,11 +7,28 @@
 			"label": "build",
 			"type": "shell",
 			"command": "gnatmake",
-			"args": ["-P", "gnatgen", "-p"],
+			"args": [
+				"-P",
+				"agen",
+				"-p",
+				"-Xmode=debug"
+			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			}
+		},
+		{
+			"label": "build tests",
+			"type": "shell",
+			"command": "gnatmake",
+			"args": [
+				"-P",
+				"tests",
+				"-p"
+			],
+			"group": "build",
+			"problemMatcher": []
 		}
 	]
 }

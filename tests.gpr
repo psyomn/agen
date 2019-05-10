@@ -1,0 +1,22 @@
+project Tests is
+
+  for Main use ("agentests.adb");
+  for Source_Dirs use ("src/**", "Generics/**", "Testing/**", "tests/**");
+  for Exec_Dir use "bin/";
+
+  for Object_Dir use "obj/debug";
+
+  for Ignore_Source_Sub_Dirs use (".git/");
+
+  package Compiler is
+	for Switches ("Ada") use ("-g", "-gnatwa");
+  end Compiler;
+
+  package Naming is
+    for Spec ("Generics.Testing") use "Generics.Testing.ads";
+    for Body ("Generics.Testing") use "Generics.Testing.adb";
+    for Spec ("Testing.Directories") use "Testing.Directories.ads";
+    for Body ("Testing.Directories") use "Testing.Directories.adb";
+  end Naming;
+
+end Tests;

@@ -1,4 +1,4 @@
--- Copyright 2014-2019 Simon Symeonidis (psyomn)
+-- Copyright 2014-2019 Simon Symeonidis (psyomn), Patrick Kelly (entomy)
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -11,6 +11,7 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
+
 
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Characters.Handling; use Ada.Characters.Handling;
@@ -56,7 +57,8 @@ package body Agen is
 
   procedure Create_Project(Name : String) is
   begin
-    Put("Creating Project...");
+    Put_Line("Creating Project...");
+    
     -- Create root directory
     Create_Directory(Name);
 
@@ -187,8 +189,16 @@ package body Agen is
   end Print_Value_Comment;
 
   procedure Print_Procedure(Name : String) is
+  begin
+    Print_Procedure(Name, False);
+  end Print_Procedure;
+
+  procedure Print_Procedure(Name : String; Stub_Comments : Boolean) is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
+    if Stub_Comments then
+      Print_Comment("Summary of " & Name);
+    end if;
     Put_Line("procedure " & Sanitized_Name & " is");
     Put_Line("begin");
     New_Line;
@@ -196,8 +206,17 @@ package body Agen is
   end Print_Procedure;
 
   procedure Print_Procedure(Name : String; Param : Parameter) is
+  begin
+    Print_Procedure(Name, Param, False);
+  end Print_Procedure;
+
+  procedure Print_Procedure(Name : String; Param : Parameter; Stub_Comments : Boolean) is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
+    if Stub_Comments then
+      Print_Comment("Summary of " & Name);
+      Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
+    end if;
     Put_Line("procedure " & Sanitized_Name & "(" & To_String(Param.Name) & " : " & To_String(Param.Of_Type) & ") is");
     Put_Line("begin");
     New_Line;
@@ -205,8 +224,19 @@ package body Agen is
   end Print_Procedure;
 
   procedure Print_Procedure(Name : String; Params : Parameter_Array) is
+  begin
+    Print_Procedure(Name, Params, False);
+  end Print_Procedure;
+
+  procedure Print_Procedure(Name : String; Params : Parameter_Array; Stub_Comments : Boolean) is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
+    if Stub_Comments then
+      Print_Comment("Summary of " & Name);
+      for Param of Params loop
+        Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
+      end loop;
+    end if;
     Put("procedure " & Sanitized_Name & "(");
     for I in 1 .. Params'Length - 1 loop
       Put(To_String(Params(I).Name) & " : " & To_String(Params(Params'Last).Of_Type) & "; ");
@@ -219,12 +249,26 @@ package body Agen is
 
   procedure Print_Function(Form : Parameter) is
   begin
-    Print_Function(To_String(Form.Name), To_String(Form.Of_Type));
+    Print_Function(Form, False);
+  end Print_Function;
+
+  procedure Print_Function(Form : Parameter; Stub_Comments : Boolean) is
+  begin
+    Print_Function(To_String(Form.Name), To_String(Form.Of_Type), Stub_Comments);
   end Print_Function;
 
   procedure Print_Function(Name : String; Returns : String) is
+  begin
+    Print_Function(Name, Returns, False);
+  end Print_Function;
+
+  procedure Print_Function(Name : String; Returns : String; Stub_Comments : Boolean) is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
+    if Stub_Comments then
+      Print_Comment("Summary of " & Name);
+      Print_Return_Comment("Summary of return value");
+    end if;
     Put_Line("function " & Sanitized_Name & " return " & Returns & " is");
     Put_Line("begin");
     New_Line;
@@ -233,12 +277,27 @@ package body Agen is
 
   procedure Print_Function(Form : Parameter; Param : Parameter) is
   begin
-    Print_Function(To_String(Form.Name), To_String(Form.Of_Type), Param);
+    Print_Function(Form, Param, False);
+  end Print_Function;
+
+  procedure Print_Function(Form : Parameter; Param : Parameter; Stub_Comments : Boolean) is
+  begin
+    Print_Function(To_String(Form.Name), To_String(Form.Of_Type), Param, Stub_Comments);
   end Print_Function;
 
   procedure Print_Function(Name : String; Returns : String; Param : Parameter) is
+  begin
+    Print_Function(Name, Returns, Param, False);
+  end Print_Function;
+
+  procedure Print_Function(Name : String; Returns : String; Param : Parameter; Stub_Comments : Boolean) is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
+    if Stub_Comments then
+      Print_Comment("Summary of " & Name);
+      Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
+      Print_Return_Comment("Summary of return value");
+    end if;
     Put_Line("function " & Sanitized_Name & "(" & To_String(Param.Name) & " : " & To_String(Param.Of_Type) & ") return " & Returns & " is");
     Put_Line("begin");
     New_Line;
@@ -247,12 +306,29 @@ package body Agen is
 
   procedure Print_Function(Form : Parameter; Params : Parameter_Array) is
   begin
-    Print_Function(To_String(Form.Name), To_String(Form.Of_Type), Params);
+    Print_Function(Form, Params, False);
+  end Print_Function;
+
+  procedure Print_Function(Form : Parameter; Params : Parameter_Array; Stub_Comments : Boolean) is
+  begin
+    Print_Function(To_String(Form.Name), To_String(Form.Of_Type), Params, Stub_Comments);
   end Print_Function;
 
   procedure Print_Function(Name : String; Returns : String; Params : Parameter_Array) is
+  begin
+    Print_Function(Name, Returns, Params, False);
+  end Print_Function;
+
+  procedure Print_Function(Name : String; Returns : String; Params : Parameter_Array; Stub_Comments : Boolean) is
     Sanitized_Name : constant String := Sanitize_Name(Name);
   begin
+    if Stub_Comments then
+      Print_Comment("Summary of " & Name);
+      for Param of Params loop
+        Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
+      end loop;
+      Print_Return_Comment("Summary of return value");
+    end if;
     Put("function " & Sanitized_Name & "(");
     -- Iterate through all but the last parameter, which is printed differently
     for I in 1 .. Params'Length - 1 loop
