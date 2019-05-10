@@ -168,10 +168,20 @@ package body Agen is
     Put_Line("--@field " & Name & " " & Message);
   end Print_Field_Comment;
 
+  procedure Print_Function_Comment(Form : Parameter) is
+  begin
+    Print_Function_Comment(To_String(Form.Name));
+  end Print_Function_Comment;
+
   procedure Print_Function_Comment(Name : String) is
   begin
     Print_Comment("Summary of " & Name);
     Print_Return_Comment("Summary of return value");
+  end Print_Function_Comment;
+
+  procedure Print_Function_Comment(Form : Parameter; Param : Parameter) is
+  begin
+    Print_Function_Comment(To_String(Form.Name), Param);
   end Print_Function_Comment;
 
   procedure Print_Function_Comment(Name : String; Param : Parameter) is
@@ -179,6 +189,11 @@ package body Agen is
       Print_Comment("Summary of " & Name);
       Print_Param_Comment(To_String(Param.Name), "Summary of " & To_String(Param.Name));
       Print_Return_Comment("Summary of return value");
+  end Print_Function_Comment;
+
+  procedure Print_Function_Comment(Form : Parameter; Params : Parameter_Array) is
+  begin
+    Print_Function_Comment(To_String(Form.Name), Params);
   end Print_Function_Comment;
 
   procedure Print_Function_Comment(Name : String; Params : Parameter_Array) is

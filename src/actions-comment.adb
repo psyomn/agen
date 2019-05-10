@@ -25,7 +25,9 @@ package body Actions.Comment is
       Put_Line("    (desc|description) <message> - Print a description doc comment");
       Put_Line("    (ex|exception) <name> <mesage> - Print an exception doc comment");
       Put_Line("    field <name> <message> - Print a field doc comment");
+      Put_Line("    (function|fn) name:return_type [parameter:type]* - Prints a set of function doc comments");
       Put_Line("    param <name> <message> - Print a param doc comment");
+      Put_Line("    (procedure|proc) name [parameter:type]* - Prints a set of procedure doc comments");
       Put_Line("    (ret|return) <message> - Prints a return doc comment");
       Put_Line("    (summ|summary) <message> - Print a summary doc comment");
       Put_Line("    value <name> <message> - Print a value doc comment");
@@ -69,6 +71,36 @@ package body Actions.Comment is
             Name : constant String := Argument_Stack.Pop;
          begin
             Print_Field_Comment(Name, Argument_Stack.Pop_Remaining);
+            return True;
+         end;
+      elsif To_Upper(Target) = "FUNCTION" or To_Upper(Target) = "FN" then
+         declare
+            Func : Parameter;
+         begin
+            if Argument_Stack.Is_Empty then
+               Put_Line(Standard_Error, "Error: no function signature was specified");
+               goto Fail;
+            end if;
+            if not Try_Parse(Argument_Stack.Pop, Func) then
+               Put_Line(Standard_Error, "Error: The function signature was invalid");
+               goto Fail;
+            end if;
+            if Argument_Stack.Is_Empty then
+               Print_Function_Comment(Func);
+            else
+               declare
+                  Params : Parameter_Array(1 .. Argument_Stack.Length);
+               begin
+               for I in 1 .. Argument_Stack.Length loop
+                  if not Try_Parse(Argument_Stack.Pop, Params(I)) then
+                     Argument_Stack.Push_Back;
+                     Put_Line(Standard_Error, "Error: The parameter signature """ & Argument_Stack.Pop & """ was invalid");
+                     goto Fail;
+                  end if;
+               end loop;
+               Print_Function_Comment(Func, Params);
+               end;
+            end if;
             return True;
          end;
       elsif To_Upper(Target) = "PARAM" then
